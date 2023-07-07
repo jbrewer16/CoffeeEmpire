@@ -64,13 +64,13 @@ public class GameManager : MonoBehaviour
     public void updateText()
     {
         // Update the gems UI text with the current gems value
-        beanCntText.text = "Beans: " + beanCnt.ToString();
+        beanCntText.text = "" + beanCnt.ToString();
         // Update the money UI text with the current money value
-        moneyText.text = "Money: " + money.ToString();
+        moneyText.text = "$ " + money.ToString();
         // Update the gems UI text with the current gems value
-        gemsText.text = "Gems: " + gems.ToString();
+        gemsText.text = "" + gems.ToString();
         // Update the gems UI text with the current gems value
-        coffeeCntText.text = "Coffee: " + coffee.ToString() + "c";
+        coffeeCntText.text = coffee.ToString() + "c";
 
     }
 
