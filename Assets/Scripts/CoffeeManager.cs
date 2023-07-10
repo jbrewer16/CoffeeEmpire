@@ -109,6 +109,11 @@ public class CoffeeManager : MonoBehaviour
         }
     }
 
+    public void reduceBrewTimer()
+    {
+        timer -= (float)(timer * 0.15);
+    }
+
     private float CalculateBrewCapacity()
     {
         float percentageIncrease = 0.1f; // 3% increase

@@ -123,6 +123,11 @@ public class CustomerManager : MonoBehaviour
         }
     }
 
+    public void reduceSellTimer()
+    {
+        timer -= (float)(timer * 0.15);
+    }
+
     private float CalculateCustCapacity()
     {
         float percentageIncrease = 0.1f; // 3% increase
