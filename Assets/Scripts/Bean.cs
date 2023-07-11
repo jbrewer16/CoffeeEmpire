@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Bean : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class Bean : MonoBehaviour
 
     public GameObject gameManagerObj;
     public GameObject unlockPanel;
+
+    public Slider timerSlider;
+    public Slider beanUpgSlider;
 
     public GameManager gameManager;
 
@@ -41,6 +45,9 @@ public class Bean : MonoBehaviour
         growClicked = false;
         gameManager = gameManagerObj.GetComponent<GameManager>();
         unlockPriceText.text = "Unlock $" + unlockPrice;
+        timerSlider.maxValue = timer;
+        timerSlider.value = timer;
+        beanUpgSlider.value = 1;
     }
 
     private void Update()
@@ -48,6 +55,7 @@ public class Bean : MonoBehaviour
         if (hasManager || growClicked)
         {
             timer -= Time.deltaTime;
+            timerSlider.value = timerSlider.maxValue - timer;
 
             if (timer <= 0f)
             {
@@ -65,6 +73,7 @@ public class Bean : MonoBehaviour
         upgradeCostText.text = "$" + CalculateUpgradeCost();
         timeToGrowText.text = timer.ToString("0") + "s";
         upgradeCounterText.text = currentUpgrade + "/50";
+        beanUpgSlider.value = currentUpgrade;
     }
 
     public void UpgradeBean()
