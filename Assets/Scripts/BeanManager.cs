@@ -34,7 +34,7 @@ public class BeanManager : MonoBehaviour
     {
 
         float offsetY = 0f; // Offset value to position each UI object vertically
-        float spacing = 10f; // Spacing between UI objects
+        float spacing = 15f; // Spacing between UI objects
 
         for (int i = 0; i < beans.Count; i++)
         {
