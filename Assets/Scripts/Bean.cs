@@ -32,14 +32,15 @@ public class Bean : MonoBehaviour
 
     private int growCount;
     private int upgradeMultiplier = 0;
-    private const int TimeReductionInterval = 50;
+    private int currentStageUpgradeCount = 1;
+    private int timeReductionInterval = 25;
     private const float TimeReductionFactor = 0.5f;
     private float timer;
     private bool hasManager;
 
     private void Start()
     {
-        unlocked = false;
+        //unlocked = false;
         timer = timeToGrow;
         growCount = baseGrowCount;
         growClicked = false;
@@ -47,12 +48,13 @@ public class Bean : MonoBehaviour
         unlockPriceText.text = "Unlock $" + unlockPrice;
         timerSlider.maxValue = timer;
         timerSlider.value = timer;
+        beanUpgSlider.maxValue = timeReductionInterval;
         beanUpgSlider.value = 1;
     }
 
     private void Update()
     {
-        if (hasManager || growClicked)
+        if (unlocked && (hasManager || growClicked))
         {
             timer -= Time.deltaTime;
             timerSlider.value = timerSlider.maxValue - timer;
@@ -69,10 +71,10 @@ public class Bean : MonoBehaviour
 
     private void UpdateText()
     {
-        growCountText.text = "" + growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1);
+        growCountText.text = "" + (int)((growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1)) * gameManager.growthRateMultiplier);
         upgradeCostText.text = "$" + CalculateUpgradeCost();
         timeToGrowText.text = timer.ToString("0") + "s";
-        upgradeCounterText.text = currentUpgrade + "/50";
+        upgradeCounterText.text = currentUpgrade + "/" + timeReductionInterval;
         beanUpgSlider.value = currentUpgrade;
     }
 
@@ -80,19 +82,28 @@ public class Bean : MonoBehaviour
     {
         float upgCost = (int)(upgradeCost + (upgradeCost * Mathf.Pow(1.09f, (currentUpgrade - 1))));
 
-        if (gameManager.money >= (upgCost - (upgCost * gameManager.costReducer)))
+        upgCost = upgCost - (upgCost * gameManager.growthCostReducer);
+
+        if (gameManager.money >= upgCost)
         {
             currentUpgrade++;
+            currentStageUpgradeCount++;
 
-            gameManager.SpendMoney((upgCost - (upgCost * gameManager.costReducer)));
+            gameManager.SpendMoney(upgCost);
 
             // Update sell price based on prestige level and current upgrade
             growCount = baseGrowCount * currentUpgrade;
 
             // Reduce time to grow the bean every TimeReductionInterval upgrades
-            if (currentUpgrade % TimeReductionInterval == 0)
+            if (currentUpgrade == timeReductionInterval)
             {
                 timeToGrow *= TimeReductionFactor;
+                beanUpgSlider.minValue = timeReductionInterval;
+                timeReductionInterval += 25;
+                beanUpgSlider.maxValue = timeReductionInterval;
+                timerSlider.maxValue = timeToGrow;
+                ResetTimer();
+                //currentStageUpgradeCount = 0;
             }
         }
         
@@ -114,9 +125,7 @@ public class Bean : MonoBehaviour
 
     private void GrowBean()
     {
-        Debug.Log(upgradeMultiplier);
-        Debug.Log(growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1));
-        gameManager.AddBeans(growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1));
+        gameManager.AddBeans((int)(growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1) * gameManager.growthRateMultiplier));
     }
 
     private void ResetTimer()
@@ -136,13 +145,20 @@ public class Bean : MonoBehaviour
         {
             gameManager.SpendMoney(unlockPrice);
             unlockPanel.SetActive(false);
+            unlocked = true;
         }
+    }
+
+    public void setUnlock(bool inp)
+    {
+        unlocked = inp;
     }
 
     private float CalculateUpgradeCost()
     {
         // Implement your upgrade cost calculation logic here
         // Example: Upgrade cost doubles for each upgrade
-        return upgradeCost + (upgradeCost * Mathf.Pow(1.09f, (currentUpgrade-1)));
+        float upgCost = upgradeCost + (upgradeCost * Mathf.Pow(1.09f, (currentUpgrade - 1)));
+        return upgCost - (upgCost * gameManager.growthCostReducer);
     }
 }

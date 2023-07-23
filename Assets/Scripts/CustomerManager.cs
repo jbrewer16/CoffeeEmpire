@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System;
 
 public class CustomerManager : MonoBehaviour
 {
     public GameObject gameManagerObj;
+    public Slider sellTimer;
     public TMP_Text timerTxt;
     public TMP_Text serveSpeedPriceTxt;
     public TMP_Text custCapacityPriceTxt;
@@ -14,8 +16,9 @@ public class CustomerManager : MonoBehaviour
 
     public float serveSpeed;
     public float serveSpeedUpgPrice;
-    public int custCapacity;
     public float custCapacityUpgPrice;
+    public float timerReduceAmount;
+    public int custCapacity;
     public int custCapacityUpgrades;
     public int sellPrice;
 
@@ -34,12 +37,15 @@ public class CustomerManager : MonoBehaviour
         custCapacityUpgPrice = 50;
         custCapacity = 1;
         custCapacityUpgrades = 1;
+        timerReduceAmount = 0.25f;
         gameManager = gameManagerObj.GetComponent<GameManager>();
         timer = serveSpeed;
         timerTxt.text = timer + "s";
         custCapacityTxt.text = custCapacity + " Cup";
-        serveSpeedPriceTxt.text = "$" + serveSpeedUpgPrice;
+        serveSpeedPriceTxt.text = "$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
         custCapacityPriceTxt.text = "$" + custCapacityUpgPrice;
+        sellTimer.maxValue = timer;
+        sellTimer.value = timer;
     }
 
     // Update is called once per frame
@@ -48,6 +54,7 @@ public class CustomerManager : MonoBehaviour
         if (gameManager.coffee >= 1)
         {
             timer -= Time.deltaTime;
+            sellTimer.value = timer;
 
             if (timer <= 0f)
             {
@@ -55,15 +62,15 @@ public class CustomerManager : MonoBehaviour
                 ResetTimer();
             }
 
-            UpdateText();
         }
+        UpdateText();
     }
 
     public void UpdateText()
     {
         timerTxt.text = timer + "s";
         custCapacityTxt.text = custCapacity + " Cup";
-        serveSpeedPriceTxt.text = "$" + serveSpeedUpgPrice;
+        serveSpeedPriceTxt.text = "$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
         custCapacityPriceTxt.text = "$" + custCapacityUpgPrice;
     }
 
@@ -74,37 +81,36 @@ public class CustomerManager : MonoBehaviour
 
     private void sellCoffee()
     {
-        if (gameManager.coffee >= custCapacity)
+
+        if(gameManager.coffee >= custCapacity)
         {
+            gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * custCapacity;
             gameManager.coffee -= custCapacity;
-            if(gameManager.investors != 0)
-            {
-                gameManager.money += (sellPrice + (sellPrice * (gameManager.investors * gameManager.investorEffectiveness))) * custCapacity;
-            } else
-            {
-                gameManager.money += sellPrice * custCapacity;
-            }
-            
-        }
-        else
+        } else if(gameManager.coffee > 0)
         {
-            if (gameManager.investors != 0)
-            {
-                gameManager.money += (sellPrice + (sellPrice * (gameManager.investors * gameManager.investorEffectiveness))) * custCapacity;
-            }
-            else
-            {
-                gameManager.money += sellPrice * custCapacity;
-            }
+            gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * gameManager.coffee;
             gameManager.coffee -= gameManager.coffee;
         }
+
+        //if (gameManager.coffee >= custCapacity)
+        //{
+        //    gameManager.coffee -= custCapacity;
+        //    if(gameManager.investors != 0)
+        //    {
+        //        gameManager.money += ((sellPrice + gameManager.coffeeSellPriceInc) + ((sellPrice + gameManager.coffeeSellPriceInc) * (gameManager.investors * gameManager.investorEffectiveness))) * custCapacity;
+        //    } else
+        //    {
+        //        gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * custCapacity;
+        //    }
+            
+        //}
     }
 
     public void upgradeServeSpeed()
     {
-        if (gameManager.money >= serveSpeedUpgPrice)
+        if (gameManager.money >= (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer)))
         {
-            gameManager.SpendMoney(serveSpeedUpgPrice);
+            gameManager.SpendMoney((serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer)));
             serveSpeed -= 0.15f;
             CalculateSpeedUpgPrice();
             UpdateText();
@@ -125,7 +131,8 @@ public class CustomerManager : MonoBehaviour
 
     public void reduceSellTimer()
     {
-        timer -= (float)(timer * 0.15);
+        //timer -= (float)(timer * 0.15);
+        timer -= timerReduceAmount;
     }
 
     private float CalculateCustCapacity()

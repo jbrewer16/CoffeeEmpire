@@ -7,14 +7,20 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public List<Bean> beans = new List<Bean>();
-    public float money = 0;
-    public float investorEffectiveness = 0.001f;
-    public float costReducer = 0f;
-    public int beanCnt = 0;
-    public int coffee = 0;
-    public int gems = 0;
-    public int prestigeLevel = 0;
-    public int investors = 0;
+    public float money;
+    public float investorEffectiveness;
+    //public float costReducer;
+    public float growthRateMultiplier;
+    public float growthCostReducer;
+    public float brewTimeCostReducer;
+    public float sellTimeCostReducer;
+    public float coffeeSellPriceInc;
+    public int beanDensity;
+    public int beanCnt;
+    public int coffee;
+    public int gems;
+    public int prestigeLevel;
+    public int investors;
 
     // Track unlocked coffee beans
     private bool[] unlockedBeans;
@@ -44,6 +50,17 @@ public class GameManager : MonoBehaviour
         money = 10;
         gems = 0;
         prestigeLevel = 1;
+        investors = 0;
+        investorEffectiveness = 0.001f;
+        //costReducer = 0f;
+        growthRateMultiplier = 1.00f;
+        growthCostReducer = 0;
+        brewTimeCostReducer = 0;
+        sellTimeCostReducer = 0;
+        coffeeSellPriceInc = 0;
+        beanDensity = 0;
+        beanCnt = 0;
+        coffee = 0;
 
         // Initialize unlocked beans array (assuming there are 10 beans in total)
         unlockedBeans = new bool[10];
@@ -142,4 +159,35 @@ public class GameManager : MonoBehaviour
         //UpdateMoneyText();
         //UpdateGemsText();
     }
+
+    public void AddGrowthRateMultiplier(float g)
+    {
+        growthRateMultiplier += g;
+    }
+
+    public void AddGrowthCostReducer(float g)
+    {
+        growthCostReducer += g;
+    }
+
+    public void AddBeanDensity(int b)
+    {
+        beanDensity += b;
+    }
+
+    public void ReduceBrewTimeCost(float b)
+    {
+        brewTimeCostReducer += b;
+    }
+
+    public void ReduceSellTimeCost(float s)
+    {
+        sellTimeCostReducer += s;
+    }
+
+    public void AddCoffeeSellPrice(int c)
+    {
+        coffeeSellPriceInc += c;
+    }
+
 }

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 public class CoffeeManager : MonoBehaviour
 {
 
     public GameObject gameManagerObj;
+    public Slider timerSlider;
     public TMP_Text timerTxt;
     public TMP_Text brewSpeedPriceTxt;
     public TMP_Text brewCapacityPriceTxt;
@@ -15,8 +17,9 @@ public class CoffeeManager : MonoBehaviour
 
     public float brewSpeed;
     public float brewSpeedUpgPrice;
-    public int brewCapacity;
     public float brewCapacityUpgPrice;
+    public float timerReduceAmount;
+    public int brewCapacity;
     public int brewCapacityUpgrades;
     public int sellPrice;
 
@@ -34,36 +37,38 @@ public class CoffeeManager : MonoBehaviour
         brewCapacityUpgPrice = 50;
         brewCapacity = 1;
         brewCapacityUpgrades = 1;
+        timerReduceAmount = 0.25f;
         gameManager = gameManagerObj.GetComponent<GameManager>();
         timer = brewSpeed;
         timerTxt.text = timer + "s";
         capacityTxt.text = brewCapacity + " Cup";
         brewSpeedPriceTxt.text = "$" + brewSpeedUpgPrice;
         brewCapacityPriceTxt.text = "$" + brewCapacityUpgPrice;
+        timerSlider.maxValue = timer;
+        timerSlider.value = timer;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(gameManager.beanCnt >= beanPerCup)
+        if(gameManager.beanCnt >= (beanPerCup - gameManager.beanDensity))
         {
             timer -= Time.deltaTime;
-
+            timerSlider.value = timer;
             if (timer <= 0f)
             {
                 brewCoffee();
                 ResetTimer();
             }
-
-            UpdateText();
         }
+        UpdateText();
     }
 
     public void UpdateText()
     {
         timerTxt.text = timer + "s";
         capacityTxt.text = brewCapacity + " Cup";
-        brewSpeedPriceTxt.text = "$" + brewSpeedUpgPrice;
+        brewSpeedPriceTxt.text = "$" + (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer));
         brewCapacityPriceTxt.text = "$" + brewCapacityUpgPrice;
     }
 
@@ -74,23 +79,23 @@ public class CoffeeManager : MonoBehaviour
 
     private void brewCoffee()
     {
-        if(gameManager.beanCnt >= (beanPerCup * brewCapacity))
+        if(gameManager.beanCnt >= ((beanPerCup - gameManager.beanDensity) * brewCapacity))
         {
-            gameManager.beanCnt -= (beanPerCup * brewCapacity);
+            gameManager.beanCnt -= ((beanPerCup - gameManager.beanDensity) * brewCapacity);
             gameManager.coffee += brewCapacity;
         } else
         {
-            int cupsToBrew = gameManager.beanCnt / beanPerCup;
-            gameManager.beanCnt -= cupsToBrew * beanPerCup;
+            int cupsToBrew = gameManager.beanCnt / (beanPerCup - gameManager.beanDensity);
+            gameManager.beanCnt -= cupsToBrew * (beanPerCup - gameManager.beanDensity);
             gameManager.coffee += cupsToBrew;
         }
     }
 
     public void upgradeBrewTime()
     {
-        if(gameManager.money >= brewSpeedUpgPrice)
+        if(gameManager.money >= (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer)))
         {
-            gameManager.SpendMoney(brewSpeedUpgPrice);
+            gameManager.SpendMoney((brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer)));
             brewSpeed -= 0.15f;
             CalculateSpeedUpgPrice();
             UpdateText();
@@ -111,7 +116,8 @@ public class CoffeeManager : MonoBehaviour
 
     public void reduceBrewTimer()
     {
-        timer -= (float)(timer * 0.15);
+        //timer -= (float)(timer * 0.15);
+        timer -= timerReduceAmount;
     }
 
     private float CalculateBrewCapacity()

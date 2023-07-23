@@ -64,7 +64,7 @@ public class InvestorUpgrade : MonoBehaviour
 
     public void upgradeCostReducer(float cR)
     {
-        gameManager.costReducer += cR;
+        gameManager.growthCostReducer += cR;
     }
 
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Barista : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class Barista : MonoBehaviour
     public TMP_Text baristaNameTxt;
     public Bean bean;
     public GameObject gameManagerObj;
+    public Button buyButton;
 
     private GameManager gameManager;
 
@@ -24,6 +26,15 @@ public class Barista : MonoBehaviour
         costTxt.text = "$" + cost;
         baristaNameTxt.text = baristaName;
         gameManager = gameManagerObj.GetComponent<GameManager>();
+        buyButton.interactable = false;
+    }
+
+    private void Update()
+    {
+        if(gameManager.money >= cost && bean.unlocked)
+        {
+            buyButton.interactable = true;
+        }
     }
 
     public void buyBarista()
