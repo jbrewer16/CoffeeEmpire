@@ -50,6 +50,7 @@ public class Bean : MonoBehaviour
         timerSlider.value = timer;
         beanUpgSlider.maxValue = timeReductionInterval;
         beanUpgSlider.value = 1;
+        currentUpgrade = gameManager.inv_upgStartCnt + 1;
     }
 
     private void Update()
@@ -71,7 +72,9 @@ public class Bean : MonoBehaviour
 
     private void UpdateText()
     {
-        growCountText.text = "" + (int)((growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1)) * gameManager.growthRateMultiplier);
+        growCountText.text = "" + 
+            (int)((growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1)) * 
+            (gameManager.growthRateMultiplier + (gameManager.investors * gameManager.investorEffectiveness)));
         upgradeCostText.text = "$" + CalculateUpgradeCost();
         timeToGrowText.text = timer.ToString("0") + "s";
         upgradeCounterText.text = currentUpgrade + "/" + timeReductionInterval;
@@ -125,7 +128,8 @@ public class Bean : MonoBehaviour
 
     private void GrowBean()
     {
-        gameManager.AddBeans((int)(growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1) * gameManager.growthRateMultiplier));
+        gameManager.AddBeans((int)((growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1)) *
+            (gameManager.growthRateMultiplier + (gameManager.investors * gameManager.investorEffectiveness))));
     }
 
     private void ResetTimer()
@@ -154,11 +158,18 @@ public class Bean : MonoBehaviour
         unlocked = inp;
     }
 
+    public void resetBean()
+    {
+        currentUpgrade = gameManager.inv_upgStartCnt + 1;
+        growCount = baseGrowCount * currentUpgrade;
+        UpdateText();
+    }
+
     private float CalculateUpgradeCost()
     {
         // Implement your upgrade cost calculation logic here
         // Example: Upgrade cost doubles for each upgrade
         float upgCost = upgradeCost + (upgradeCost * Mathf.Pow(1.09f, (currentUpgrade - 1)));
-        return upgCost - (upgCost * gameManager.growthCostReducer);
+        return upgCost - (upgCost * (gameManager.growthCostReducer + gameManager.inv_upgPriceReducer));
     }
 }

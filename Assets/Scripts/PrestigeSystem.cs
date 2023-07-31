@@ -1,36 +1,78 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PrestigeSystem : MonoBehaviour
 {
-    private int currentMoney;
-    private int totalMoneyEarned;
-    private int totalInvestorsEarned;
-    private float incomeMultiplier;
+
+    public GameObject gameManagerObject;
+    public TMP_Text totalInvestorsTxt;
+    public TMP_Text beanMultiplierTxt;
+    public TMP_Text claimableInvestorsTxt;
+
+    // Minimum money needed for investors to start accumulating
+    public int moneyThreshold;
+    public int claimableInvestors;
+    public float beanMultiplier;
+    public bool canAccumulateInvestors;
+    private GameManager gameManager;
+
+    public void Start()
+    {
+        moneyThreshold = 1000000;
+        claimableInvestors = 0;
+        beanMultiplier = 0;
+        canAccumulateInvestors = false;
+
+        gameManager = gameManagerObject.GetComponent<GameManager>();
+
+        updateText();
+    }
+
+    public void Update()
+    {
+        if(!canAccumulateInvestors && gameManager.totalMoneyEarned >= moneyThreshold)
+        {
+            canAccumulateInvestors = true;
+        } else if(canAccumulateInvestors && gameManager.totalMoneyEarned >= moneyThreshold){
+            claimableInvestors = CalculateInvestorsAwarded(gameManager.totalMoneyEarned);
+        }
+
+        updateText();
+
+    }
 
     public void Prestige()
     {
-        int investorsAwarded = CalculateInvestorsAwarded(totalMoneyEarned);
-        incomeMultiplier = CalculateIncomeMultiplier(totalInvestorsEarned);
+        int investorsAwarded = CalculateInvestorsAwarded(gameManager.totalMoneyEarned);
+        beanMultiplier = CalculateBeanMultiplier(claimableInvestors);
 
-        totalInvestorsEarned += investorsAwarded;
-        totalMoneyEarned = 0;
-        currentMoney = 0;
+        //claimableInvestors += investorsAwarded;
+        awardInvestors();
+        gameManager.prestigeReset();
 
-        Debug.Log("Prestige Successful!");
-        Debug.Log("Investors Awarded: " + investorsAwarded);
-        Debug.Log("Income Multiplier: " + incomeMultiplier);
-        Debug.Log("Current Money: " + currentMoney);
     }
 
-    private int CalculateInvestorsAwarded(int totalMoneyEarned)
+    private void awardInvestors()
     {
-        return (int)(totalMoneyEarned * 0.1f); // 10% of total money earned
+        gameManager.AddInvestors(claimableInvestors);
+        claimableInvestors = 0;
     }
 
-    private float CalculateIncomeMultiplier(int totalInvestorsEarned)
+    private void updateText()
     {
-        return 1 + (totalInvestorsEarned * 0.05f); // 5% increase per investor earned
+        totalInvestorsTxt.text = "" + gameManager.investors;
+        beanMultiplierTxt.text = "" + (gameManager.investorIncomeBoost * 100) + "%";
+        claimableInvestorsTxt.text = "" + claimableInvestors;
+    }
+
+    private int CalculateInvestorsAwarded(float totalMoneyEarned)
+    {
+        return (int)(Mathf.Round(totalMoneyEarned * 0.00001f)); // 0.001% of total money earned
+    }
+
+    private float CalculateBeanMultiplier(int totalInvestorsEarned)
+    {
+        return 1 + (totalInvestorsEarned * 0.02f); // 2% increase per investor earned
     }
 }

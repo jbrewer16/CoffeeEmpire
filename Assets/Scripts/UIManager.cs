@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     public GameObject hamburgerMenu;
     public GameObject baristasPanel;
     public GameObject upgradesPanel;
+    public GameObject investorsPanel;
 
     private CanvasGroup beansPageCG;
     private CanvasGroup coffeePageCG;
@@ -29,6 +30,7 @@ public class UIManager : MonoBehaviour
         hamburgerMenu.SetActive(false);
         baristasPanel.SetActive(false);
         upgradesPanel.SetActive(false);
+        investorsPanel.SetActive(false);
 
         beansPageCG = beansPage.GetComponent<CanvasGroup>();
         coffeePageCG = coffeePage.GetComponent<CanvasGroup>();
@@ -61,6 +63,7 @@ public class UIManager : MonoBehaviour
         hamburgerMenu.SetActive(false);
         baristasPanel.SetActive(true);
         upgradesPanel.SetActive(false);
+        investorsPanel.SetActive(false);
     }
 
     public void CloseBaristasPanel()
@@ -74,11 +77,26 @@ public class UIManager : MonoBehaviour
         hamburgerMenu.SetActive(false);
         baristasPanel.SetActive(false);
         upgradesPanel.SetActive(true);
+        investorsPanel.SetActive(false);
     }
 
     public void CloseUpgradesPanel()
     {
         upgradesPanel.SetActive(false);
+        footer.SetActive(true);
+    }
+
+    public void OpenInvestorsPanel()
+    {
+        hamburgerMenu.SetActive(false);
+        baristasPanel.SetActive(false);
+        upgradesPanel.SetActive(false);
+        investorsPanel.SetActive(true);
+    }
+
+    public void CloseInvestorsPanel()
+    {
+        investorsPanel.SetActive(false);
         footer.SetActive(true);
     }
 

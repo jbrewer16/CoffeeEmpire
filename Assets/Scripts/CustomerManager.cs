@@ -84,11 +84,13 @@ public class CustomerManager : MonoBehaviour
 
         if(gameManager.coffee >= custCapacity)
         {
-            gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * custCapacity;
+            //gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * custCapacity;
+            gameManager.AddMoney((sellPrice + gameManager.coffeeSellPriceInc + gameManager.inv_profitBonus) * custCapacity);
             gameManager.coffee -= custCapacity;
         } else if(gameManager.coffee > 0)
         {
-            gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * gameManager.coffee;
+            //gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * gameManager.coffee;
+            gameManager.AddMoney((sellPrice + gameManager.coffeeSellPriceInc) * gameManager.coffee);
             gameManager.coffee -= gameManager.coffee;
         }
 
@@ -132,7 +134,18 @@ public class CustomerManager : MonoBehaviour
     public void reduceSellTimer()
     {
         //timer -= (float)(timer * 0.15);
-        timer -= timerReduceAmount;
+        timer -= (timerReduceAmount + gameManager.inv_speedPerTap);
+    }
+
+    public void resetCustomer()
+    {
+        sellPrice = 5;
+        serveSpeed = 10;
+        serveSpeedUpgPrice = 1000;
+        custCapacityUpgPrice = 50;
+        custCapacity = 1;
+        custCapacityUpgrades = 1;
+        timerReduceAmount = 0.25f;
     }
 
     private float CalculateCustCapacity()

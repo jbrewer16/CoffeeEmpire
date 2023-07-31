@@ -79,14 +79,16 @@ public class CoffeeManager : MonoBehaviour
 
     private void brewCoffee()
     {
-        if(gameManager.beanCnt >= ((beanPerCup - gameManager.beanDensity) * brewCapacity))
+        int freeChance = UnityEngine.Random.Range(0, 100);
+        bool freeUpg = freeChance < gameManager.inv_freeBrewChance;
+        if (gameManager.beanCnt >= ((beanPerCup - gameManager.beanDensity) * brewCapacity))
         {
-            gameManager.beanCnt -= ((beanPerCup - gameManager.beanDensity) * brewCapacity);
+            if(!freeUpg) gameManager.beanCnt -= ((beanPerCup - gameManager.beanDensity) * brewCapacity);
             gameManager.coffee += brewCapacity;
         } else
         {
             int cupsToBrew = gameManager.beanCnt / (beanPerCup - gameManager.beanDensity);
-            gameManager.beanCnt -= cupsToBrew * (beanPerCup - gameManager.beanDensity);
+            if(!freeUpg) gameManager.beanCnt -= cupsToBrew * (beanPerCup - gameManager.beanDensity);
             gameManager.coffee += cupsToBrew;
         }
     }
@@ -117,7 +119,17 @@ public class CoffeeManager : MonoBehaviour
     public void reduceBrewTimer()
     {
         //timer -= (float)(timer * 0.15);
-        timer -= timerReduceAmount;
+        timer -= (timerReduceAmount + gameManager.inv_speedPerTap);
+    }
+
+    public void resetCoffee()
+    {
+        brewSpeed = 10;
+        brewSpeedUpgPrice = 1000;
+        brewCapacityUpgPrice = 50;
+        brewCapacity = 1;
+        brewCapacityUpgrades = 1;
+        timerReduceAmount = 0.25f;
     }
 
     private float CalculateBrewCapacity()

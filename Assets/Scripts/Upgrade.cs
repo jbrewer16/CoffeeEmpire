@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class Upgrade : MonoBehaviour
 {
@@ -18,6 +16,7 @@ public class Upgrade : MonoBehaviour
     public GameObject gameManagerObj;
 
     public UpgOptions upgOptions = new UpgOptions();
+    public UpgType upgTypes = new UpgType();
 
     private GameManager gameManager;
     private int currentUpgrade;
@@ -25,7 +24,15 @@ public class Upgrade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        btnTxt.text = "Upgrade \n $" + cost;
+        switch (upgTypes)
+        {
+            case UpgType.cash:
+                btnTxt.text = "Upgrade \n $" + cost;
+                break;
+            case UpgType.investor:
+                btnTxt.text = "Upgrade \n " + cost;
+                break;
+        }
         gameManager = gameManagerObj.GetComponent<GameManager>();
         currentUpgrade = 1;
         updateText();
@@ -36,7 +43,16 @@ public class Upgrade : MonoBehaviour
     {
 
         updateText();
-        btnTxt.text = "Upgrade \n $" + CalculateUpgradeCost();
+        switch (upgTypes)
+        {
+            case UpgType.cash:
+                btnTxt.text = "Upgrade \n $" + CalculateUpgradeCost();
+                break;
+            case UpgType.investor:
+                btnTxt.text = "Upgrade \n " + CalculateUpgradeCost();
+                break;
+        }
+        
 
     }
 
@@ -62,6 +78,24 @@ public class Upgrade : MonoBehaviour
             case UpgOptions.coffeeSellPrice:
                 upgDescTxt.text = "$" + (5 + gameManager.coffeeSellPriceInc) + "\n" + desc;
                 break;
+            case UpgOptions.inv_startUpgCount:
+                upgDescTxt.text = "+" + gameManager.inv_upgStartCnt + "\n" + desc;
+                break;
+            case UpgOptions.inv_profitBonus:
+                upgDescTxt.text = "+" + gameManager.inv_profitBonus + "\n" + desc;
+                break;  
+            case UpgOptions.inv_upgPriceReducer:
+                upgDescTxt.text = gameManager.inv_upgPriceReducer + "%\n" + desc;
+                break;
+            case UpgOptions.inv_speedIncreasePerTap:
+                upgDescTxt.text = gameManager.inv_speedPerTap + "s\n" + desc;
+                break;
+            case UpgOptions.inv_freeUpgChance:
+                upgDescTxt.text = gameManager.inv_freeUpgChance + "%\n" + desc;
+                break;
+            case UpgOptions.inv_freeBrewChance:
+                upgDescTxt.text = gameManager.inv_freeBrewChance + "%\n" + desc;
+                break;
             default:
                 break;
         }
@@ -71,28 +105,65 @@ public class Upgrade : MonoBehaviour
     {
         float upgCost = (int)(cost + (cost * Mathf.Pow(upgradeCostMultiplier, (currentUpgrade - 1))));
         //if (gameManager.money >= upgCost)
+        switch (upgTypes)
         {
-            gameManager.SpendMoney(upgCost);
-            currentUpgrade++;
+            case UpgType.cash:
+                int freeChance = Random.Range(0, 100);
+                bool freeUpg = freeChance < gameManager.inv_freeUpgChance;
+                if (!freeUpg)
+                {
+                    gameManager.SpendMoney(upgCost);
+                }
+                else
+                {
+                    Debug.Log("Congrats! Free Upgrade!");
+                }
+                break;
+            case UpgType.investor:
+                gameManager.SpendInvestors((int)upgCost);
+                break;
+        }
+        
+        {
+            currentUpgrade++; 
             switch (upgOptions)
             {
                 case UpgOptions.growthMult:
-                    gameManager.AddGrowthRateMultiplier(0.05f);
+                    gameManager.AddGrowthRateMultiplier();
                     break;
                 case UpgOptions.growthCost:
-                    gameManager.AddGrowthCostReducer(0.01f);
+                    gameManager.AddGrowthCostReducer();
                     break;
                 case UpgOptions.beanDensity:
-                    gameManager.AddBeanDensity(1);
+                    gameManager.AddBeanDensity();
                     break;
                 case UpgOptions.brewTime:
-                    gameManager.ReduceBrewTimeCost(0.01f);
+                    gameManager.ReduceBrewTimeCost();
                     break;
                 case UpgOptions.sellTime:
-                    gameManager.ReduceSellTimeCost(0.01f);
+                    gameManager.ReduceSellTimeCost();
                     break;
                 case UpgOptions.coffeeSellPrice:
-                    gameManager.AddCoffeeSellPrice(1);
+                    gameManager.AddCoffeeSellPrice();
+                    break;
+
+                case UpgOptions.inv_startUpgCount:
+                    gameManager.AddInvUpgStartCount();
+                    break;
+                case UpgOptions.inv_profitBonus:
+                    gameManager.AddInvProfitBonus();
+                    break;
+                case UpgOptions.inv_upgPriceReducer:
+                    gameManager.AddInvUpgPriceReducer();
+                    break;
+                case UpgOptions.inv_speedIncreasePerTap:
+                    gameManager.AddInvSpeedPerTap();
+                    break;
+                case UpgOptions.inv_freeUpgChance:
+                    gameManager.AddInvFreeUpgChance();
+                    break;
+                case UpgOptions.inv_freeBrewChance:
+                    gameManager.AddInvFreeBrewChance();
                     break;
                 default:
                     break;
@@ -106,7 +177,8 @@ public class Upgrade : MonoBehaviour
     {
         // Implement your upgrade cost calculation logic here
         // Example: Upgrade cost doubles for each upgrade
-        return cost + (cost * Mathf.Pow(upgradeCostMultiplier, (currentUpgrade - 1)));
+        float upgCost = cost + (cost * Mathf.Pow(upgradeCostMultiplier, (currentUpgrade - 1)));
+        return upgCost - (upgCost * gameManager.inv_upgPriceReducer);
     }
 
 }
@@ -118,5 +190,17 @@ public enum UpgOptions
     beanDensity,
     brewTime,
     sellTime,
-    coffeeSellPrice
+    coffeeSellPrice,
+    inv_startUpgCount,
+    inv_profitBonus,
+    inv_upgPriceReducer,
+    inv_speedIncreasePerTap,
+    inv_freeUpgChance,
+    inv_freeBrewChance
+}
+
+public enum UpgType
+{
+    cash,
+    investor
 }
