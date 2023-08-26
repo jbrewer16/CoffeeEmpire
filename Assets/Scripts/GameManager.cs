@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
 		// Update the gems UI text with the current gems value
 		beanCntText.text = "" + beanCnt.ToString();
 		// Update the money UI text with the current money value
-		moneyText.text = "$ " + money.ToString();
+		moneyText.text = GlobalFunctions.FormatAsUSD(money);//"$ " + money.ToString();
 		// Update the gems UI text with the current gems value
 		gemsText.text = "" + gems.ToString();
 		// Update the gems UI text with the current gems value

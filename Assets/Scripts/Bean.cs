@@ -75,7 +75,7 @@ public class Bean : MonoBehaviour
         growCountText.text = "" + 
             (int)((growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1)) * 
             (gameManager.growthRateMultiplier + (gameManager.investors * gameManager.investorEffectiveness)));
-        upgradeCostText.text = "$" + CalculateUpgradeCost();
+        upgradeCostText.text = GlobalFunctions.FormatAsUSD(CalculateUpgradeCost());//"$" + CalculateUpgradeCost();
         timeToGrowText.text = timer.ToString("0") + "s";
         upgradeCounterText.text = currentUpgrade + "/" + timeReductionInterval;
         beanUpgSlider.value = currentUpgrade;

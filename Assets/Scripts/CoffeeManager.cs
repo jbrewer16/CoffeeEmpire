@@ -42,8 +42,8 @@ public class CoffeeManager : MonoBehaviour
         timer = brewSpeed;
         timerTxt.text = timer + "s";
         capacityTxt.text = brewCapacity + " Cup";
-        brewSpeedPriceTxt.text = "$" + brewSpeedUpgPrice;
-        brewCapacityPriceTxt.text = "$" + brewCapacityUpgPrice;
+        brewSpeedPriceTxt.text = GlobalFunctions.FormatAsUSD(brewSpeedUpgPrice);//"$" + brewSpeedUpgPrice;
+        brewCapacityPriceTxt.text = GlobalFunctions.FormatAsUSD(brewCapacityUpgPrice);//"$" + brewCapacityUpgPrice;
         timerSlider.maxValue = timer;
         timerSlider.value = timer;
     }
@@ -68,8 +68,8 @@ public class CoffeeManager : MonoBehaviour
     {
         timerTxt.text = timer + "s";
         capacityTxt.text = brewCapacity + " Cup";
-        brewSpeedPriceTxt.text = "$" + (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer));
-        brewCapacityPriceTxt.text = "$" + brewCapacityUpgPrice;
+        brewSpeedPriceTxt.text = GlobalFunctions.FormatAsUSD((brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer)));//"$" + (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer));
+        brewCapacityPriceTxt.text = GlobalFunctions.FormatAsUSD(brewCapacityUpgPrice);//"$" + brewCapacityUpgPrice;
     }
 
     private void ResetTimer()
