@@ -23,7 +23,7 @@ public class Barista : MonoBehaviour
     void Start()
     {
         sellsBeanTxt.text = "Sells " + beanName;
-        costTxt.text = "$" + cost;
+        costTxt.text = GlobalFunctions.FormatNumber(cost, true);
         baristaNameTxt.text = baristaName;
         gameManager = gameManagerObj.GetComponent<GameManager>();
         buyButton.interactable = false;

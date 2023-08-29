@@ -45,7 +45,7 @@ public class Bean : MonoBehaviour
         growCount = baseGrowCount;
         growClicked = false;
         gameManager = gameManagerObj.GetComponent<GameManager>();
-        unlockPriceText.text = "Unlock $" + unlockPrice;
+        unlockPriceText.text = "Unlock " + GlobalFunctions.FormatNumber(unlockPrice, true);
         timerSlider.maxValue = timer;
         timerSlider.value = timer;
         beanUpgSlider.maxValue = timeReductionInterval;
@@ -72,10 +72,10 @@ public class Bean : MonoBehaviour
 
     private void UpdateText()
     {
-        growCountText.text = "" + 
-            (int)((growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1)) * 
+        growCountText.text = "" + GlobalFunctions.FormatNumber(
+            growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1) * 
             (gameManager.growthRateMultiplier + (gameManager.investors * gameManager.investorEffectiveness)));
-        upgradeCostText.text = GlobalFunctions.FormatAsUSD(CalculateUpgradeCost());//"$" + CalculateUpgradeCost();
+        upgradeCostText.text = GlobalFunctions.FormatNumber(CalculateUpgradeCost(), true);//"$" + CalculateUpgradeCost();
         timeToGrowText.text = timer.ToString("0") + "s";
         upgradeCounterText.text = currentUpgrade + "/" + timeReductionInterval;
         beanUpgSlider.value = currentUpgrade;

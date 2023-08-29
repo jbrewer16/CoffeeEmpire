@@ -30,8 +30,8 @@ public class GameManager : MonoBehaviour
 	public int inv_freeBrewChance;
 	public float inv_upgPriceReducer;
 	public int beanDensity;
-	public int beanCnt;
-	public int coffee;
+	public long beanCnt;
+	public long coffee;
 	public int gems;
 	public int prestigeLevel;
 	public int investors;
@@ -102,13 +102,13 @@ public class GameManager : MonoBehaviour
 	public void updateText()
 	{
 		// Update the gems UI text with the current gems value
-		beanCntText.text = "" + beanCnt.ToString();
+		beanCntText.text = "" + GlobalFunctions.FormatNumber(beanCnt);
 		// Update the money UI text with the current money value
-		moneyText.text = GlobalFunctions.FormatAsUSD(money);//"$ " + money.ToString();
+		moneyText.text = GlobalFunctions.FormatNumber(money, true);//"$ " + money.ToString();
 		// Update the gems UI text with the current gems value
-		gemsText.text = "" + gems.ToString();
+		gemsText.text = "" + GlobalFunctions.FormatNumber(gems);
 		// Update the gems UI text with the current gems value
-		coffeeCntText.text = coffee.ToString() + "c";
+		coffeeCntText.text = GlobalFunctions.FormatNumber(coffee);
 
 	}
 

@@ -42,8 +42,8 @@ public class CoffeeManager : MonoBehaviour
         timer = brewSpeed;
         timerTxt.text = timer + "s";
         capacityTxt.text = brewCapacity + " Cup";
-        brewSpeedPriceTxt.text = GlobalFunctions.FormatAsUSD(brewSpeedUpgPrice);//"$" + brewSpeedUpgPrice;
-        brewCapacityPriceTxt.text = GlobalFunctions.FormatAsUSD(brewCapacityUpgPrice);//"$" + brewCapacityUpgPrice;
+        brewSpeedPriceTxt.text = GlobalFunctions.FormatNumber(brewSpeedUpgPrice, true);//"$" + brewSpeedUpgPrice;
+        brewCapacityPriceTxt.text = GlobalFunctions.FormatNumber(brewCapacityUpgPrice, true);//"$" + brewCapacityUpgPrice;
         timerSlider.maxValue = timer;
         timerSlider.value = timer;
     }
@@ -68,8 +68,8 @@ public class CoffeeManager : MonoBehaviour
     {
         timerTxt.text = timer + "s";
         capacityTxt.text = brewCapacity + " Cup";
-        brewSpeedPriceTxt.text = GlobalFunctions.FormatAsUSD((brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer)));//"$" + (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer));
-        brewCapacityPriceTxt.text = GlobalFunctions.FormatAsUSD(brewCapacityUpgPrice);//"$" + brewCapacityUpgPrice;
+        brewSpeedPriceTxt.text = GlobalFunctions.FormatNumber(brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer), true);//"$" + (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer));
+        brewCapacityPriceTxt.text = GlobalFunctions.FormatNumber(brewCapacityUpgPrice, true);//"$" + brewCapacityUpgPrice;
     }
 
     private void ResetTimer()
@@ -87,7 +87,7 @@ public class CoffeeManager : MonoBehaviour
             gameManager.coffee += brewCapacity;
         } else
         {
-            int cupsToBrew = gameManager.beanCnt / (beanPerCup - gameManager.beanDensity);
+            long cupsToBrew = gameManager.beanCnt / (beanPerCup - gameManager.beanDensity);
             if(!freeUpg) gameManager.beanCnt -= cupsToBrew * (beanPerCup - gameManager.beanDensity);
             gameManager.coffee += cupsToBrew;
         }

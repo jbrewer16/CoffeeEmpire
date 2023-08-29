@@ -24,15 +24,17 @@ public class Upgrade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        switch (upgTypes)
-        {
-            case UpgType.cash:
-                btnTxt.text = "Upgrade \n $" + cost;
-                break;
-            case UpgType.investor:
-                btnTxt.text = "Upgrade \n " + cost;
-                break;
-        }
+        //switch (upgTypes)
+        //{
+        //    case UpgType.cash:
+        //        btnTxt.text = "Upgrade \n $" + cost;
+        //        break;
+        //    case UpgType.investor:
+        //        btnTxt.text = "Upgrade \n " + cost;
+        //        break;
+        //}
+
+        btnTxt.text = "Upgrade \n " + GlobalFunctions.FormatNumber(cost, upgTypes == UpgType.cash);
         gameManager = gameManagerObj.GetComponent<GameManager>();
         currentUpgrade = 1;
         updateText();
@@ -43,16 +45,16 @@ public class Upgrade : MonoBehaviour
     {
 
         updateText();
-        switch (upgTypes)
-        {
-            case UpgType.cash:
-                btnTxt.text = "Upgrade \n $" + CalculateUpgradeCost();
-                break;
-            case UpgType.investor:
-                btnTxt.text = "Upgrade \n " + CalculateUpgradeCost();
-                break;
-        }
-        
+        btnTxt.text = "Upgrade \n " + GlobalFunctions.FormatNumber(cost, upgTypes == UpgType.cash);
+        //switch (upgTypes)
+        //{
+        //    case UpgType.cash:
+        //        btnTxt.text = "Upgrade \n $" + CalculateUpgradeCost();
+        //        break;
+        //    case UpgType.investor:
+        //        btnTxt.text = "Upgrade \n " + CalculateUpgradeCost();
+        //        break;
+        //}
 
     }
 

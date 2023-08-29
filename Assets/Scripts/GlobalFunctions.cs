@@ -5,38 +5,46 @@ using System.Numerics;
 
 public static class GlobalFunctions
 {
-    public static string FormatAsUSD(float value)
+    public static string FormatNumber(float value, bool asUSD = false)
     {
 
+        float k = 1000;
         float mill = 1000000;
         float bill = 1000000000;
         float trill = 1000000000000;
         float quad = 1000000000000000;
         float quin = 1000000000000000000;
 
+        string prefix = (asUSD) ? "$" : "";
+        string formatString = "F2";
+
         if(value >= quin)
         {
             float quintillions = value / quin;
-            return "$" + quintillions.ToString("F3") + "Q";
+            return prefix + quintillions.ToString(formatString) + "Q";
         } else if (value >= quad && value < quin)
         {
             float quadrillions = value / quad;
-            return "$" + quadrillions.ToString("F3") + "q"; 
+            return prefix + quadrillions.ToString(formatString) + "q"; 
         } else if (value >= trill && value < quad)
         {
             float trillions = value / trill;
-            return "$" + trillions.ToString("F3") + "Trill";
+            return prefix + trillions.ToString(formatString) + "Trill";
         } else if(value >= bill && value < trill)
         {
             float billions = value / bill;
-            return "$" + billions.ToString("F3") + "Bill";
+            return prefix + billions.ToString(formatString) + "Bill";
         } else if(value >= mill && value < bill)
         {
             float millions = value / mill;
-            return "$" + millions.ToString("F3") + "Mill";
+            return prefix + millions.ToString(formatString) + "Mill";
+        } else if(value >= k && value < mill)
+        {
+            float thous = value / k;
+            return prefix + thous.ToString(formatString) + "K";
         } else
         {
-            return value.ToString("C2");
+            return (asUSD) ? value.ToString("C2") : value.ToString();
         }
 
     }

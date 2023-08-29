@@ -42,8 +42,8 @@ public class CustomerManager : MonoBehaviour
         timer = serveSpeed;
         timerTxt.text = timer + "s";
         custCapacityTxt.text = custCapacity + " Cup";
-        serveSpeedPriceTxt.text = GlobalFunctions.FormatAsUSD((serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer)));//"$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
-        custCapacityPriceTxt.text = GlobalFunctions.FormatAsUSD(custCapacityUpgPrice);//"$" + custCapacityUpgPrice;
+        serveSpeedPriceTxt.text = GlobalFunctions.FormatNumber(serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer), true);//"$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
+        custCapacityPriceTxt.text = GlobalFunctions.FormatNumber(custCapacityUpgPrice, true);//"$" + custCapacityUpgPrice;
         sellTimer.maxValue = timer;
         sellTimer.value = timer;
     }
@@ -70,8 +70,8 @@ public class CustomerManager : MonoBehaviour
     {
         timerTxt.text = timer + "s";
         custCapacityTxt.text = custCapacity + " Cup";
-        serveSpeedPriceTxt.text = GlobalFunctions.FormatAsUSD((serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer)));//"$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
-        custCapacityPriceTxt.text = GlobalFunctions.FormatAsUSD(custCapacityUpgPrice);//"$" + custCapacityUpgPrice;
+        serveSpeedPriceTxt.text = GlobalFunctions.FormatNumber(serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer), true);//"$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
+        custCapacityPriceTxt.text = GlobalFunctions.FormatNumber(custCapacityUpgPrice, true);//"$" + custCapacityUpgPrice;
     }
 
     private void ResetTimer()
