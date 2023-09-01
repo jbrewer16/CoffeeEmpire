@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IDataPersistence
 {
 	public static GameManager Instance { get; private set; }
 	public GameObject prestigeSystemObj;
@@ -62,24 +62,24 @@ public class GameManager : MonoBehaviour
 	private void Start()
 	{
 		// Initialize base stats
-		money = 10;
-		gems = 0;
-		prestigeLevel = 1;
-		investors = 0;
-		investorEffectiveness = 0.02f;
-		investorIncomeBoost = 0;
-		//costReducer = 0f;
-		growthRateMultiplier = 1.00f;
-		inv_growthRateMultiplier = 1.00f;
-		inv_profitBonus = 0;
-		inv_upgPriceReducer = 0;
-		growthCostReducer = 0;
-		brewTimeCostReducer = 0;
-		sellTimeCostReducer = 0;
-		coffeeSellPriceInc = 0;
-		beanDensity = 0;
-		beanCnt = 0;
-		coffee = 0;
+		//money = 10;
+		//gems = 0;
+		//prestigeLevel = 1;
+		//investors = 0;
+		//investorEffectiveness = 0.02f;
+		//investorIncomeBoost = 0;
+		////costReducer = 0f;
+		//growthRateMultiplier = 1.00f;
+		//inv_growthRateMultiplier = 1.00f;
+		//inv_profitBonus = 0;
+		//inv_upgPriceReducer = 0;
+		//growthCostReducer = 0;
+		//brewTimeCostReducer = 0;
+		//sellTimeCostReducer = 0;
+		//coffeeSellPriceInc = 0;
+		//beanDensity = 0;
+		//beanCnt = 0;
+		//coffee = 0;
 
 		prestigeSystem = prestigeSystemObj.GetComponent<PrestigeSystem>();
 
@@ -109,6 +109,63 @@ public class GameManager : MonoBehaviour
 		gemsText.text = "" + GlobalFunctions.FormatNumber(gems);
 		// Update the gems UI text with the current gems value
 		coffeeCntText.text = GlobalFunctions.FormatNumber(coffee);
+
+	}
+
+	public void LoadData(GameData data)
+    {
+		this.money						= data.money;
+		this.totalMoneyEarned			= data.totalMoneyEarned;
+		this.investorEffectiveness		= data.investorEffectiveness;
+		this.investorIncomeBoost			= data.investorIncomeBoost;
+		this.growthRateMultiplier		= data.growthRateMultiplier;
+		this.inv_growthRateMultiplier	= data.inv_growthRateMultiplier;
+		this.growthCostReducer			= data.growthCostReducer;
+		this.upgPriceReducer				= data.upgPriceReducer;
+		this.brewTimeCostReducer			= data.brewTimeCostReducer;
+		this.sellTimeCostReducer			= data.sellTimeCostReducer;
+		this.coffeeSellPriceInc			= data.coffeeSellPriceInc;
+		this.inv_coffeeSellPriceInc		= data.inv_coffeeSellPriceInc;
+		this.inv_speedPerTap				= data.inv_speedPerTap;
+		this.inv_profitBonus				= data.inv_profitBonus;
+		this.inv_freeUpgChance			= data.inv_freeUpgChance;
+		this.inv_freeBrewChance			= data.inv_freeBrewChance;
+		this.inv_upgPriceReducer			= data.inv_upgPriceReducer;
+		this.beanDensity					= data.beanDensity;
+		this.beanCnt						= data.beanCnt;
+		this.coffee						= data.coffee;
+		this.gems						= data.gems;
+		this.prestigeLevel				= data.prestigeLevel;
+		this.investors					= data.investors;
+		this.inv_upgStartCnt				= data.inv_upgStartCnt;
+	}
+
+	public void SaveData(ref GameData data)
+    {
+		data.money						= this.money;
+		data.totalMoneyEarned			= this.totalMoneyEarned;
+		data.investorEffectiveness		= this.investorEffectiveness;
+		data.investorIncomeBoost			= this.investorIncomeBoost;
+		data.growthRateMultiplier		= this.growthRateMultiplier;
+		data.inv_growthRateMultiplier	= this.inv_growthRateMultiplier;
+		data.growthCostReducer			= this.growthCostReducer;
+		data.upgPriceReducer				= this.upgPriceReducer;
+		data.brewTimeCostReducer			= this.brewTimeCostReducer;
+		data.sellTimeCostReducer			= this.sellTimeCostReducer;
+		data.coffeeSellPriceInc			= this.coffeeSellPriceInc;
+		data.inv_coffeeSellPriceInc		= this.inv_coffeeSellPriceInc;
+		data.inv_speedPerTap				= this.inv_speedPerTap;
+		data.inv_profitBonus				= this.inv_profitBonus;
+		data.inv_freeUpgChance			= this.inv_freeUpgChance;
+		data.inv_freeBrewChance			= this.inv_freeBrewChance;
+		data.inv_upgPriceReducer			= this.inv_upgPriceReducer;
+		data.beanDensity					= this.beanDensity;
+		data.beanCnt						= this.beanCnt;
+		data.coffee						= this.coffee;
+		data.gems						= this.gems;
+		data.prestigeLevel				= this.prestigeLevel;
+		data.investors					= this.investors;
+		data.inv_upgStartCnt				= this.inv_upgStartCnt;
 
 	}
 

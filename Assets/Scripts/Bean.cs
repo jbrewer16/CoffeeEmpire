@@ -33,7 +33,7 @@ public class Bean : MonoBehaviour
     private int growCount;
     private int upgradeMultiplier = 0;
     private int currentStageUpgradeCount = 1;
-    private int timeReductionInterval = 25;
+    public int timeReductionInterval = 25;
     private const float TimeReductionFactor = 0.5f;
     private float timer;
     private bool hasManager;
@@ -50,7 +50,10 @@ public class Bean : MonoBehaviour
         timerSlider.value = timer;
         beanUpgSlider.maxValue = timeReductionInterval;
         beanUpgSlider.value = 1;
-        currentUpgrade = gameManager.inv_upgStartCnt + 1;
+        unlockPanel.SetActive(!unlocked);
+        growCount = baseGrowCount * currentUpgrade;
+        UpdateText();
+        //currentUpgrade = gameManager.inv_upgStartCnt + 1;
     }
 
     private void Update()

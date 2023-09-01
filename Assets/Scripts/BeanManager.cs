@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BeanManager : MonoBehaviour
+public class BeanManager : MonoBehaviour, IDataPersistence
 {
 
     public List<BeanData> beans = new List<BeanData>();
+    public List<Bean> beanUIObjs = new List<Bean>();
     public GameManager gameManagerScript;
     public Transform beanUIContainer;
     public GameObject beanUIPrefab;
@@ -20,8 +21,35 @@ public class BeanManager : MonoBehaviour
 
         gameManagerScript = gameManager.GetComponent<GameManager>();
 
-        fillBeans();
+        //fillBeans();
         createBeansUI();
+
+    }
+
+    public void LoadData(GameData data)
+    {
+        this.beans = data.beans;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+
+        List<Bean> b = new List<Bean>();
+
+        foreach (Bean bd in beanUIObjs)
+        {
+            Debug.Log("Name: " + bd.beanName + " | Unlocked?: " + bd.unlocked);
+        }
+
+        for (int i = 0; i < beanUIObjs.Count; i++){
+
+            b.Add(beanUIObjs[i]);
+            data.beans[i].unlocked = beanUIObjs[i].unlocked;
+            data.beans[i].currentUpgrade = beanUIObjs[i].currentUpgrade;
+            data.beans[i].timeToGrow = beanUIObjs[i].timeToGrow;
+            data.beans[i].timeReductionInterval = beanUIObjs[i].timeReductionInterval;
+
+        }
 
     }
 
@@ -67,7 +95,12 @@ public class BeanManager : MonoBehaviour
             {
                 beanScript.unlockPanel.SetActive(false);
                 beanScript.setUnlock(true);
+                beanScript.unlocked = true;
+                //beanScript.unlockBean();
                 Debug.Log("unlocking the first bean! : " + beanScript.unlocked);
+            } else
+            {
+                beanScript.unlocked = beanData.unlocked;
             }
             beanScript.name = beanData.beanName;
             beanScript.gameManagerObj = this.gameManager;
@@ -78,7 +111,9 @@ public class BeanManager : MonoBehaviour
             beanScript.currentUpgrade = beanData.currentUpgrade;
             beanScript.timeToGrow = beanData.timeToGrow;
             beanScript.unlockPrice = beanData.unlockPrice;
+            beanScript.timeReductionInterval = beanData.timeReductionInterval;
 
+            beanUIObjs.Add(newBeanUI.GetComponent<Bean>());
             gameManagerScript.AddToBeanScriptList(beanScript);
 
             // Increase the offsetY value to position the next UI object with spacing
@@ -92,6 +127,7 @@ public class BeanManager : MonoBehaviour
 
 }
 
+[System.Serializable]
 public class BeanData
 {
 
@@ -100,8 +136,10 @@ public class BeanData
     public int baseGrowCount;
     public int upgradeCost;
     public int currentUpgrade;
-    public int timeToGrow;
+    public int timeReductionInterval;
+    public float timeToGrow;
     public int unlockPrice;
+    public bool unlocked;
 
     public BeanData(string bN, int bGC, int upgC, int tTG, int unlP)
     {
@@ -112,6 +150,8 @@ public class BeanData
         currentUpgrade = 1;
         timeToGrow = tTG;
         unlockPrice = unlP;
+        timeReductionInterval = 25;
+        unlocked = false;
     }
 
 }
