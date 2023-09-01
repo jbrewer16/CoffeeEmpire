@@ -36,11 +36,6 @@ public class BeanManager : MonoBehaviour, IDataPersistence
 
         List<Bean> b = new List<Bean>();
 
-        foreach (Bean bd in beanUIObjs)
-        {
-            Debug.Log("Name: " + bd.beanName + " | Unlocked?: " + bd.unlocked);
-        }
-
         for (int i = 0; i < beanUIObjs.Count; i++){
 
             b.Add(beanUIObjs[i]);
@@ -97,7 +92,7 @@ public class BeanManager : MonoBehaviour, IDataPersistence
                 beanScript.setUnlock(true);
                 beanScript.unlocked = true;
                 //beanScript.unlockBean();
-                Debug.Log("unlocking the first bean! : " + beanScript.unlocked);
+                //Debug.Log("unlocking the first bean! : " + beanScript.unlocked);
             } else
             {
                 beanScript.unlocked = beanData.unlocked;
