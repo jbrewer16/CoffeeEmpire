@@ -33,11 +33,12 @@ public class CustomerManager : MonoBehaviour
     {
         sellPrice = 5;
         serveSpeed = 10;
-        serveSpeedUpgPrice = 1000;
-        custCapacityUpgPrice = 50;
-        custCapacity = 1;
-        custCapacityUpgrades = 1;
-        timerReduceAmount = 0.25f;
+        //serveSpeedUpgPrice = 1000;
+        //custCapacityUpgPrice = 50;
+        //custCapacity = 1;
+        //CalculateCustCapacity();
+        //custCapacityUpgrades = 1;
+        //timerReduceAmount = 0.25f;
         gameManager = gameManagerObj.GetComponent<GameManager>();
         timer = serveSpeed;
         timerTxt.text = timer + "s";

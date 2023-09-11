@@ -114,30 +114,43 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 	public void LoadData(GameData data)
     {
-		this.money						= data.money;
-		this.totalMoneyEarned			= data.totalMoneyEarned;
-		this.investorEffectiveness		= data.investorEffectiveness;
-		this.investorIncomeBoost			= data.investorIncomeBoost;
-		this.growthRateMultiplier		= data.growthRateMultiplier;
-		this.inv_growthRateMultiplier	= data.inv_growthRateMultiplier;
-		this.growthCostReducer			= data.growthCostReducer;
-		this.upgPriceReducer				= data.upgPriceReducer;
-		this.brewTimeCostReducer			= data.brewTimeCostReducer;
-		this.sellTimeCostReducer			= data.sellTimeCostReducer;
-		this.coffeeSellPriceInc			= data.coffeeSellPriceInc;
-		this.inv_coffeeSellPriceInc		= data.inv_coffeeSellPriceInc;
-		this.inv_speedPerTap				= data.inv_speedPerTap;
-		this.inv_profitBonus				= data.inv_profitBonus;
-		this.inv_freeUpgChance			= data.inv_freeUpgChance;
-		this.inv_freeBrewChance			= data.inv_freeBrewChance;
-		this.inv_upgPriceReducer			= data.inv_upgPriceReducer;
-		this.beanDensity					= data.beanDensity;
-		this.beanCnt						= data.beanCnt;
-		this.coffee						= data.coffee;
-		this.gems						= data.gems;
-		this.prestigeLevel				= data.prestigeLevel;
-		this.investors					= data.investors;
-		this.inv_upgStartCnt				= data.inv_upgStartCnt;
+		this.money								= data.money;
+		this.totalMoneyEarned					= data.totalMoneyEarned;
+		this.investorEffectiveness				= data.investorEffectiveness;
+		this.investorIncomeBoost					= data.investorIncomeBoost;
+		this.growthRateMultiplier				= data.growthRateMultiplier;
+		this.inv_growthRateMultiplier			= data.inv_growthRateMultiplier;
+		this.growthCostReducer					= data.growthCostReducer;
+		this.upgPriceReducer						= data.upgPriceReducer;
+		this.brewTimeCostReducer					= data.brewTimeCostReducer;
+		this.sellTimeCostReducer					= data.sellTimeCostReducer;
+		this.coffeeSellPriceInc					= data.coffeeSellPriceInc;
+		this.inv_coffeeSellPriceInc				= data.inv_coffeeSellPriceInc;
+		this.inv_speedPerTap						= data.inv_speedPerTap;
+		this.inv_profitBonus						= data.inv_profitBonus;
+		this.inv_freeUpgChance					= data.inv_freeUpgChance;
+		this.inv_freeBrewChance					= data.inv_freeBrewChance;
+		this.inv_upgPriceReducer					= data.inv_upgPriceReducer;
+		this.beanDensity							= data.beanDensity;
+		this.beanCnt								= data.beanCnt;
+		this.coffee								= data.coffee;
+		this.gems								= data.gems;
+		this.prestigeLevel						= data.prestigeLevel;
+		this.investors							= data.investors;
+		this.inv_upgStartCnt						= data.inv_upgStartCnt;
+
+		coffeeManager.brewCapacityUpgrades		= data.brewCapacityUpgrades;
+		coffeeManager.timerReduceAmount			= data.coffeeTimerReduceAmount;
+		coffeeManager.brewCapacity				= data.brewCapacity;
+		coffeeManager.brewCapacityUpgPrice		= data.brewCapacityUpgPrice;
+		coffeeManager.brewSpeedUpgPrice			= data.brewSpeedUpgPrice;
+
+		customerManager.custCapacityUpgrades		= data.custCapacityUpgrades;
+		customerManager.timerReduceAmount		= data.customerTimerReduceAmount;
+		customerManager.custCapacity				= data.custCapacity;
+		customerManager.custCapacityUpgPrice		= data.custCapacityUpgPrice;
+		customerManager.serveSpeedUpgPrice		= data.serveSpeedUpgPrice;
+
 	}
 
 	public void SaveData(ref GameData data)
@@ -167,6 +180,17 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		data.investors					= this.investors;
 		data.inv_upgStartCnt				= this.inv_upgStartCnt;
 
+		data.brewCapacityUpgrades		= coffeeManager.brewCapacityUpgrades;
+		data.coffeeTimerReduceAmount		= coffeeManager.timerReduceAmount;
+		data.brewCapacity				= coffeeManager.brewCapacity;
+		data.brewCapacityUpgPrice		= coffeeManager.brewCapacityUpgPrice;
+		data.brewSpeedUpgPrice			= coffeeManager.brewSpeedUpgPrice;	 
+
+		data.custCapacityUpgrades		= customerManager.custCapacityUpgrades;
+		data.customerTimerReduceAmount	= customerManager.timerReduceAmount;
+		data.custCapacity				= customerManager.custCapacity;
+		data.custCapacityUpgPrice		= customerManager.custCapacityUpgPrice;
+		data.serveSpeedUpgPrice			= customerManager.serveSpeedUpgPrice;
 	}
 
 	public void AddToBeanScriptList(Bean b)

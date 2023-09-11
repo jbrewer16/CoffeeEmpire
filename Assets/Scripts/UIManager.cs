@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public GameObject baristasPanel;
     public GameObject upgradesPanel;
     public GameObject investorsPanel;
+    //public GameObject confirmationPanel;
 
     private CanvasGroup beansPageCG;
     private CanvasGroup coffeePageCG;
@@ -31,6 +32,7 @@ public class UIManager : MonoBehaviour
         baristasPanel.SetActive(false);
         upgradesPanel.SetActive(false);
         investorsPanel.SetActive(false);
+        //confirmationPanel.SetActive(false);
 
         beansPageCG = beansPage.GetComponent<CanvasGroup>();
         coffeePageCG = coffeePage.GetComponent<CanvasGroup>();
@@ -119,6 +121,22 @@ public class UIManager : MonoBehaviour
         ToggleCanvasGroup(beansPageCG, false);
         ToggleCanvasGroup(coffeePageCG, false);
         ToggleCanvasGroup(customerPageCG, true);
+    }
+
+    public void OpenConfirmationPanel()
+    {
+        //confirmationPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        // TODO - Confirmation panel
+
+    }
+
+    public void Cancel()
+    {
+
     }
 
     private void ToggleCanvasGroup(CanvasGroup canvasGroup, bool isVisible)

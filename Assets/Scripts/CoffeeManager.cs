@@ -33,11 +33,12 @@ public class CoffeeManager : MonoBehaviour
     void Start()
     {
         brewSpeed = 10;
-        brewSpeedUpgPrice = 1000;
-        brewCapacityUpgPrice = 50;
-        brewCapacity = 1;
-        brewCapacityUpgrades = 1;
-        timerReduceAmount = 0.25f;
+        //brewSpeedUpgPrice = 1000;
+        //brewCapacityUpgPrice = 50;
+        //CalculateBrewCapacity();
+        //brewCapacity = 1;
+        //brewCapacityUpgrades = 1;
+        //timerReduceAmount = 0.25f;
         gameManager = gameManagerObj.GetComponent<GameManager>();
         timer = brewSpeed;
         timerTxt.text = timer + "s";

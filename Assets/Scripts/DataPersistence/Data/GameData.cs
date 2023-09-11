@@ -32,6 +32,18 @@ public class GameData
 	public int investors;
 	public int inv_upgStartCnt;
 
+	public int brewCapacityUpgrades;
+	public float coffeeTimerReduceAmount;
+	public int brewCapacity;
+	public float brewCapacityUpgPrice;
+	public float brewSpeedUpgPrice;
+
+	public int custCapacityUpgrades;
+	public float customerTimerReduceAmount;
+	public int custCapacity;
+	public float custCapacityUpgPrice;
+	public float serveSpeedUpgPrice;
+
 	public List<BeanData> beans;
 	//public BeanSaveData<BeanData> beansData = new BeanSaveData<BeanData>(beans);
 
@@ -62,6 +74,17 @@ public class GameData
 		this.investors = 0;
 		this.inv_upgStartCnt = 0;
 
+		this.brewCapacityUpgrades = 1;
+		this.coffeeTimerReduceAmount = 0.25f;
+		this.brewCapacity = 1;
+		this.brewCapacityUpgPrice = 50;
+		this.brewSpeedUpgPrice = 1000;
+
+		this.custCapacityUpgrades = 1;
+		this.customerTimerReduceAmount = 0.25f;
+		this.custCapacity = 1;
+		this.custCapacityUpgPrice = 50;
+		this.serveSpeedUpgPrice = 1000;
 
 		this.beans = new List<BeanData>();
 		fillBeans();
@@ -84,6 +107,48 @@ public class GameData
 		beans.Add(new BeanData("Galactic", 32768, 250000, 900, 3750000));
 		beans.Add(new BeanData("Cosmic", 65536, 500000, 1500, 10000000));
 		beans.Add(new BeanData("Time Warp", 131072, 1000000, 1800, 25000000));
+	}
+
+	public void ResetGame()
+	{
+		this.money = 10;
+		this.totalMoneyEarned = 0;
+		this.investorEffectiveness = 0.02f;
+		this.investorIncomeBoost = 0;
+		this.growthRateMultiplier = 1.00f;
+		this.inv_growthRateMultiplier = 1.00f;
+		this.growthCostReducer = 0;
+		this.upgPriceReducer = 0;
+		this.brewTimeCostReducer = 0;
+		this.sellTimeCostReducer = 0;
+		this.coffeeSellPriceInc = 0;
+		this.inv_coffeeSellPriceInc = 0;
+		this.inv_speedPerTap = 0;
+		this.inv_profitBonus = 0;
+		this.inv_freeUpgChance = 0;
+		this.inv_freeBrewChance = 0;
+		this.inv_upgPriceReducer = 0;
+		this.beanDensity = 0;
+		this.beanCnt = 0;
+		this.coffee = 0;
+		this.gems = 0;
+		this.prestigeLevel = 0;
+		this.investors = 0;
+		this.inv_upgStartCnt = 0;
+		this.brewCapacityUpgrades = 1;
+		this.coffeeTimerReduceAmount = 0.25f;
+		this.brewCapacity = 1;
+		this.brewCapacityUpgPrice = 50;
+		this.brewSpeedUpgPrice = 1000;
+
+		this.custCapacityUpgrades = 1;
+		this.customerTimerReduceAmount = 0.25f;
+		this.custCapacity = 1;
+		this.custCapacityUpgPrice = 50;
+		this.serveSpeedUpgPrice = 1000;
+
+		this.beans = new List<BeanData>();
+		fillBeans();
 	}
 
 
