@@ -88,7 +88,7 @@ public class CoffeeManager : MonoBehaviour
             gameManager.coffee += brewCapacity;
         } else
         {
-            long cupsToBrew = gameManager.beanCnt / (beanPerCup - gameManager.beanDensity);
+            double cupsToBrew = gameManager.beanCnt / (beanPerCup - gameManager.beanDensity);
             if(!freeUpg) gameManager.beanCnt -= cupsToBrew * (beanPerCup - gameManager.beanDensity);
             gameManager.coffee += cupsToBrew;
         }

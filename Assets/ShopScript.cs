@@ -70,6 +70,33 @@ public class ShopScript : MonoBehaviour, IStoreListener
         print("Success");
         m_StoreController = controller;
     }
+
+    // TODO - Remove when IAP is fully developed
+    public void add10Gems()
+    {
+        gameManager.AddGems(10);
+    }
+    public void add55Gems()
+    {
+        gameManager.AddGems(55);
+    }
+    public void add115Gems()
+    {
+        gameManager.AddGems(115);
+    }
+    public void add250Gems()
+    {
+        gameManager.AddGems(250);
+    }
+    public void add650Gems()
+    {
+        gameManager.AddGems(650);
+    }
+    public void add1500Gems()
+    {
+        gameManager.AddGems(1500);
+    }
+
 }
 
 [Serializable]

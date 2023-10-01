@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Linq;
 
 public class DataPersistenceManager : MonoBehaviour
@@ -11,6 +12,7 @@ public class DataPersistenceManager : MonoBehaviour
     [SerializeField] private bool useEncryption;
     // TODO - temp field for testing
     [SerializeField] private bool startNewGame;
+    [SerializeField] private bool restartGame;
 
     private GameData gameData;
     private List<IDataPersistence> dataPersistenceObjs;
@@ -39,16 +41,23 @@ public class DataPersistenceManager : MonoBehaviour
         this.gameData = new GameData();
     }
 
+    public void RestartGame()
+    {
+        restartGame = true;
+        LoadGame();
+    }
+
     public void LoadGame()
     {
         // Load any saved data from file handler
         gameData = dataHandler.Load();
 
         // If no data to load, initialize gameData;
-        if(this.gameData == null || startNewGame)
+        if(this.gameData == null || startNewGame || restartGame)
         {
-            Debug.Log("No data was found, initializing data to defaults");
+            Debug.Log("No data was found or restart was clicked, initializing data to defaults");
             NewGame();
+            restartGame = false;
         }
         // Push the loaded data to all scripts that need it
         foreach(IDataPersistence dataPersistenceObj in dataPersistenceObjs)

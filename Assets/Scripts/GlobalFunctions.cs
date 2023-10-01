@@ -5,47 +5,22 @@ using System.Numerics;
 
 public static class GlobalFunctions
 {
-    public static string FormatNumber(float value, bool asUSD = false)
+    public static string FormatNumber(double value, bool asUSD = false)
     {
-
-        float k = 1000;
-        float mill = 1000000;
-        float bill = 1000000000;
-        float trill = 1000000000000;
-        float quad = 1000000000000000;
-        float quin = 1000000000000000000;
-
         string prefix = (asUSD) ? "$" : "";
-        string formatString = "F2";
 
-        if(value >= quin)
+        string[] suffixes = { "", "K", "Mill", "Bill", "Trill", "q", "Q", "s", "S", "t", "T", "u", "U" };
+        double[] scales = { 1, 1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e33, 1e36, 1e39, 1e42 };
+
+        for (int i = suffixes.Length - 1; i >= 0; i--)
         {
-            float quintillions = value / quin;
-            return prefix + quintillions.ToString(formatString) + "Q";
-        } else if (value >= quad && value < quin)
-        {
-            float quadrillions = value / quad;
-            return prefix + quadrillions.ToString(formatString) + "q"; 
-        } else if (value >= trill && value < quad)
-        {
-            float trillions = value / trill;
-            return prefix + trillions.ToString(formatString) + "Trill";
-        } else if(value >= bill && value < trill)
-        {
-            float billions = value / bill;
-            return prefix + billions.ToString(formatString) + "Bill";
-        } else if(value >= mill && value < bill)
-        {
-            float millions = value / mill;
-            return prefix + millions.ToString(formatString) + "Mill";
-        } else if(value >= k && value < mill)
-        {
-            float thous = value / k;
-            return prefix + thous.ToString(formatString) + "K";
-        } else
-        {
-            return (asUSD) ? value.ToString("C2") : value.ToString();
+            if (value >= scales[i])
+            {
+                double scaledValue = value / scales[i];
+                return prefix + ((asUSD) ? scaledValue.ToString("F2") : scaledValue.ToString("0")) + suffixes[i];
+            }
         }
 
+        return (asUSD) ? value.ToString("C2") : value.ToString("0");
     }
 }

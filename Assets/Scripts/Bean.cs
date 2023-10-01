@@ -8,11 +8,12 @@ public class Bean : MonoBehaviour
 {
 
     public int baseGrowCount;
-    public int currentUpgrade;
+    public int upgradeCount;
     public int unlockPrice;
     public string beanName;
-    public float upgradeCost;
+    public float initialUpgradeCost;
     public float timeToGrow;
+    public float upgradeCoefficient;
     public bool growClicked;
     public bool unlocked;
 
@@ -51,7 +52,7 @@ public class Bean : MonoBehaviour
         beanUpgSlider.maxValue = timeReductionInterval;
         beanUpgSlider.value = 1;
         unlockPanel.SetActive(!unlocked);
-        growCount = baseGrowCount * currentUpgrade;
+        growCount = baseGrowCount * upgradeCount;
         UpdateText();
         //currentUpgrade = gameManager.inv_upgStartCnt + 1;
     }
@@ -80,28 +81,29 @@ public class Bean : MonoBehaviour
             (gameManager.growthRateMultiplier + (gameManager.investors * gameManager.investorEffectiveness)));
         upgradeCostText.text = GlobalFunctions.FormatNumber(CalculateUpgradeCost(), true);//"$" + CalculateUpgradeCost();
         timeToGrowText.text = timer.ToString("0") + "s";
-        upgradeCounterText.text = currentUpgrade + "/" + timeReductionInterval;
-        beanUpgSlider.value = currentUpgrade;
+        upgradeCounterText.text = upgradeCount + "/" + timeReductionInterval;
+        beanUpgSlider.value = upgradeCount;
     }
 
     public void UpgradeBean()
     {
-        float upgCost = (int)(upgradeCost + (upgradeCost * Mathf.Pow(1.09f, (currentUpgrade - 1))));
+        //float upgCost = (int)(initialUpgradeCost + (initialUpgradeCost * Mathf.Pow(1.09f, (upgradeCount - 1))));
+        float upgCost = CalculateUpgradeCost();
 
-        upgCost = upgCost - (upgCost * gameManager.growthCostReducer);
+        //upgCost = upgCost - (upgCost * gameManager.growthCostReducer);
 
         if (gameManager.money >= upgCost)
         {
-            currentUpgrade++;
+            upgradeCount++;
             currentStageUpgradeCount++;
 
             gameManager.SpendMoney(upgCost);
 
             // Update sell price based on prestige level and current upgrade
-            growCount = baseGrowCount * currentUpgrade;
+            growCount = baseGrowCount * upgradeCount;
 
             // Reduce time to grow the bean every TimeReductionInterval upgrades
-            if (currentUpgrade == timeReductionInterval)
+            if (upgradeCount == timeReductionInterval)
             {
                 timeToGrow *= TimeReductionFactor;
                 beanUpgSlider.minValue = timeReductionInterval;
@@ -163,16 +165,15 @@ public class Bean : MonoBehaviour
 
     public void resetBean()
     {
-        currentUpgrade = gameManager.inv_upgStartCnt + 1;
-        growCount = baseGrowCount * currentUpgrade;
+        upgradeCount = gameManager.inv_upgStartCnt + 1;
+        growCount = baseGrowCount * upgradeCount;
         UpdateText();
     }
 
     private float CalculateUpgradeCost()
     {
-        // Implement your upgrade cost calculation logic here
-        // Example: Upgrade cost doubles for each upgrade
-        float upgCost = upgradeCost + (upgradeCost * Mathf.Pow(1.09f, (currentUpgrade - 1)));
+        float upgCost = initialUpgradeCost * Mathf.Pow(upgradeCoefficient, (upgradeCount - 1));
+        //float upgCost = initialUpgradeCost + (initialUpgradeCost * Mathf.Pow(1.09f, (upgradeCount - 1)));
         return upgCost - (upgCost * (gameManager.growthCostReducer + gameManager.inv_upgPriceReducer));
     }
 }

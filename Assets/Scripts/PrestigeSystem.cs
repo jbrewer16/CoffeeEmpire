@@ -66,9 +66,9 @@ public class PrestigeSystem : MonoBehaviour
         claimableInvestorsTxt.text = "" + claimableInvestors;
     }
 
-    private int CalculateInvestorsAwarded(float totalMoneyEarned)
+    private int CalculateInvestorsAwarded(double totalMoneyEarned)
     {
-        return (int)(Mathf.Round(totalMoneyEarned * 0.00001f)); // 0.001% of total money earned
+        return (int)(Mathf.Round((float)(totalMoneyEarned * 0.00001f))); // 0.001% of total money earned
     }
 
     private float CalculateBeanMultiplier(int totalInvestorsEarned)

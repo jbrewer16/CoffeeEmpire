@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public CoffeeManager coffeeManager;
 	public CustomerManager customerManager;
 	public List<Bean> beans = new List<Bean>();
-	public float money;
-	public float totalMoneyEarned; //Money earned this prestige
+	public double money;
+	public double totalMoneyEarned; //Money earned this prestige
 	public float investorEffectiveness;
 	public float investorIncomeBoost;
 	//public float costReducer;
@@ -30,8 +30,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public int inv_freeBrewChance;
 	public float inv_upgPriceReducer;
 	public int beanDensity;
-	public long beanCnt;
-	public long coffee;
+	public double beanCnt;
+	public double coffee;
 	public int gems;
 	public int prestigeLevel;
 	public int investors;
@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		beans.Add(b);
 	}
 
-	public void AddMoney(float amount)
+	public void AddMoney(double amount)
 	{
 		money += amount;
 		totalMoneyEarned += amount;
