@@ -1971,8 +1971,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -18.841492}
-  m_SizeDelta: {x: 0, y: -37.683228}
+  m_AnchoredPosition: {x: 0, y: -60.819}
+  m_SizeDelta: {x: 0, y: -121.64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &206587734
 MonoBehaviour:
@@ -4710,7 +4710,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 635915379}
         m_TargetAssemblyTypeName: ShopScript, Assembly-CSharp
-        m_MethodName: add115Gems
+        m_MethodName: Buy_115_Gems
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6283,9 +6283,44 @@ MonoBehaviour:
   gameManagerObj: {fileID: 471368146}
   cItem:
     Name: 10 Gems
-    id: gem_10
+    id: 10_gems
     desc: Get 10 Gems
-    price: 1.99
+    price: 0.99
+  gems_10:
+    Name: 
+    id: 
+    desc: 
+    price: 0
+  gems_55:
+    Name: 
+    id: 
+    desc: 
+    price: 0
+  gems_25:
+    Name: 55 Gems
+    id: 55_gems
+    desc: Get 55 Gems
+    price: 4.99
+  gems_115:
+    Name: 
+    id: 
+    desc: 
+    price: 0
+  gems_250:
+    Name: 
+    id: 
+    desc: 
+    price: 0
+  gems_650:
+    Name: 
+    id: 
+    desc: 
+    price: 0
+  gems_1500:
+    Name: 
+    id: 
+    desc: 
+    price: 0
 --- !u!4 &635915380
 Transform:
   m_ObjectHideFlags: 0
@@ -8453,7 +8488,6 @@ GameObject:
   - component: {fileID: 945163215}
   - component: {fileID: 945163217}
   - component: {fileID: 945163216}
-  - component: {fileID: 945163219}
   - component: {fileID: 945163218}
   m_Layer: 5
   m_Name: HamburgerMenu
@@ -8578,18 +8612,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &945163219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945163214}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a697d9a830f73f48a72221d419c7a6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &954832220
 GameObject:
   m_ObjectHideFlags: 0
@@ -11399,7 +11421,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 635915379}
         m_TargetAssemblyTypeName: ShopScript, Assembly-CSharp
-        m_MethodName: add250Gems
+        m_MethodName: Buy_250_Gems
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12730,7 +12752,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 635915379}
         m_TargetAssemblyTypeName: ShopScript, Assembly-CSharp
-        m_MethodName: add55Gems
+        m_MethodName: Buy_55_Gems
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12999,19 +13021,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 635915379}
         m_TargetAssemblyTypeName: ShopScript, Assembly-CSharp
-        m_MethodName: add10Gems
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 635915379}
-        m_TargetAssemblyTypeName: ShopScript, Assembly-CSharp
-        m_MethodName: Consumable_Btn_Pressed
+        m_MethodName: Buy_10_Gems
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15345,7 +15355,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fileName: player_save.json
   useEncryption: 0
-  startNewGame: 0
+  startNewGame: 1
+  restartGame: 0
 --- !u!1 &1611893399
 GameObject:
   m_ObjectHideFlags: 0
@@ -17411,7 +17422,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 635915379}
         m_TargetAssemblyTypeName: ShopScript, Assembly-CSharp
-        m_MethodName: add650Gems
+        m_MethodName: Buy_650_Gems
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -18675,7 +18686,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 635915379}
         m_TargetAssemblyTypeName: ShopScript, Assembly-CSharp
-        m_MethodName: add1500Gems
+        m_MethodName: Buy_1500_Gems
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

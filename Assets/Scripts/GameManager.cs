@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		// Update the money UI text with the current money value
 		moneyText.text = GlobalFunctions.FormatNumber(money, true);//"$ " + money.ToString();
 		// Update the gems UI text with the current gems value
-		gemsText.text = "" + GlobalFunctions.FormatNumber(gems);
+		gemsText.text = "" + gems;//GlobalFunctions.FormatNumber(gems);
 		// Update the gems UI text with the current gems value
 		coffeeCntText.text = GlobalFunctions.FormatNumber(coffee);
 
