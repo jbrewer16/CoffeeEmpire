@@ -14,7 +14,9 @@ public class DataPersistenceManager : MonoBehaviour
     [SerializeField] private bool startNewGame;
     [SerializeField] private bool restartGame;
 
+    [SerializeField] private GameObject beanManagerObject;
     private GameData gameData;
+    private BeanManager beanManager;
     private List<IDataPersistence> dataPersistenceObjs;
     
     public static DataPersistenceManager instance { get; private set; }
@@ -31,6 +33,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void Start()
     {
+        beanManager = beanManagerObject.GetComponent<BeanManager>();
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
         this.dataPersistenceObjs = FindAllDataPersistenceObjects();
         LoadGame();
@@ -45,6 +48,7 @@ public class DataPersistenceManager : MonoBehaviour
     {
         restartGame = true;
         LoadGame();
+        beanManager.ResetBeansUI();
     }
 
     public void LoadGame()

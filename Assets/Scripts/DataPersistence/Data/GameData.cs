@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,87 +8,77 @@ using UnityEngine;
 public class GameData
 {
 
-    public double money;
-	public double totalMoneyEarned;
-	public float investorEffectiveness;
-	public float investorIncomeBoost;
-	public float growthRateMultiplier;
-	public float inv_growthRateMultiplier;
-	public float growthCostReducer;
-	public float upgPriceReducer;
-	public float brewTimeCostReducer;
-	public float sellTimeCostReducer;
-	public float coffeeSellPriceInc;
-	public float inv_coffeeSellPriceInc;
-	public float inv_speedPerTap;
-	public int inv_profitBonus;
-	public int inv_freeUpgChance;
-	public int inv_freeBrewChance;
-	public float inv_upgPriceReducer;
-	public int beanDensity;
+	// General Player Data
 	public double beanCnt;
 	public double coffee;
+	public double lifetimeEarnings;
+    public double money;
+	public double totalMoneyEarned;
+	public int beanDensity;
 	public int gems;
 	public int prestigeLevel;
-	public int investors;
-	public int inv_upgStartCnt;
+	public long investors;
+	public string lastOnlineTime;
+	public List<BeanData> beans;
 
-	public int brewCapacityUpgrades;
-	public float coffeeTimerReduceAmount;
+	// Upgrade Page Data
+	// // Upgrades
+	public float brewTimeCostReducer;
+	public int coffeeSellPriceInc;
+	public float growthCostReducer;
+	public float growthRateMultiplier;
+	public float investorEffectiveness;
+	public float investorIncomeBoost;
+	public float sellTimeCostReducer;
+	public float upgPriceReducer;
+	// // Counts
+	public int brewTimeCostReducerCount;
+	public int coffeeSellPriceIncCount;
+	public int growthCostReducerCount;
+	public int growthRateMultiplierCount;
+	public int investorEffectivenessCount;
+	public int investorIncomeBoostCount;
+	public int sellTimeCostReducerCount;
+	public int upgPriceReducerCount;
+
+	// Investor Page Data
+	// // Upgrades
+	public float inv_growthRateMultiplier;
+    public float inv_speedPerTap;
+    public float inv_upgPriceReducer;
+	public int inv_freeBrewChance;
+	public int inv_freeUpgChance;
+	public int inv_profitBonus;
+	public int inv_upgStartCnt;
+	//public float inv_coffeeSellPriceInc;
+	// // Counts
+	public int inv_freeBrewChanceCount;
+	public int inv_freeUpgChanceCount;
+	public int inv_growthRateMultiplierCount;
+	public int inv_profitBonusCount;
+    public int inv_speedPerTapCount;
+    public int inv_upgPriceReducerCount;
+	public int inv_upgStartCntCount;
+	//public int inv_coffeeSellPriceIncCount;
+
+	// Coffee Brew Page Data
 	public int brewCapacity;
+	public int brewCapacityUpgrades;
 	public float brewCapacityUpgPrice;
 	public float brewSpeedUpgPrice;
+	public float coffeeTimerReduceAmount;
 
-	public int custCapacityUpgrades;
-	public float customerTimerReduceAmount;
+	// Customer Page Data
 	public int custCapacity;
+	public int custCapacityUpgrades;
 	public float custCapacityUpgPrice;
+	public float customerTimerReduceAmount;
 	public float serveSpeedUpgPrice;
 
-	public List<BeanData> beans;
-	//public BeanSaveData<BeanData> beansData = new BeanSaveData<BeanData>(beans);
 
 	public GameData()
     {
-        this.money = 10;
-		this.totalMoneyEarned = 0;
-		this.investorEffectiveness = 0.02f;
-		this.investorIncomeBoost = 0;
-		this.growthRateMultiplier = 1.00f;
-		this.inv_growthRateMultiplier = 1.00f;
-		this.growthCostReducer = 0;
-		this.upgPriceReducer = 0;
-		this.brewTimeCostReducer = 0;
-		this.sellTimeCostReducer = 0;
-		this.coffeeSellPriceInc = 0;
-		this.inv_coffeeSellPriceInc = 0;
-		this.inv_speedPerTap = 0;
-		this.inv_profitBonus = 0;
-		this.inv_freeUpgChance = 0;
-		this.inv_freeBrewChance = 0;
-		this.inv_upgPriceReducer = 0;
-		this.beanDensity = 0;
-		this.beanCnt = 0;
-		this.coffee = 0;
-		this.gems = 0;
-		this.prestigeLevel = 0;
-		this.investors = 0;
-		this.inv_upgStartCnt = 0;
-
-		this.brewCapacityUpgrades = 1;
-		this.coffeeTimerReduceAmount = 0.25f;
-		this.brewCapacity = 1;
-		this.brewCapacityUpgPrice = 50;
-		this.brewSpeedUpgPrice = 1000;
-
-		this.custCapacityUpgrades = 1;
-		this.customerTimerReduceAmount = 0.25f;
-		this.custCapacity = 1;
-		this.custCapacityUpgPrice = 50;
-		this.serveSpeedUpgPrice = 1000;
-
-		this.beans = new List<BeanData>();
-		fillBeans();
+		InitializeData();
 	}
 
 	/// <summary>
@@ -117,46 +108,81 @@ public class GameData
 	/// </summary>
 	public void ResetGame()
 	{
-		this.money = 10;
-		this.totalMoneyEarned = 0;
-		this.investorEffectiveness = 0.02f;
-		this.investorIncomeBoost = 0;
-		this.growthRateMultiplier = 1.00f;
-		this.inv_growthRateMultiplier = 1.00f;
-		this.growthCostReducer = 0;
-		this.upgPriceReducer = 0;
-		this.brewTimeCostReducer = 0;
-		this.sellTimeCostReducer = 0;
-		this.coffeeSellPriceInc = 0;
-		this.inv_coffeeSellPriceInc = 0;
-		this.inv_speedPerTap = 0;
-		this.inv_profitBonus = 0;
-		this.inv_freeUpgChance = 0;
-		this.inv_freeBrewChance = 0;
-		this.inv_upgPriceReducer = 0;
-		this.beanDensity = 0;
+		InitializeData();
+	}
+
+	private void InitializeData()
+    {
+		//Debug.Log("Initializing Data!!!!!");
+		// General Player Data
 		this.beanCnt = 0;
 		this.coffee = 0;
+		this.lifetimeEarnings = 10;
+		this.money = 10;
+		this.totalMoneyEarned = 10;
+		this.beanDensity = 0;
 		this.gems = 0;
 		this.prestigeLevel = 0;
 		this.investors = 0;
+		this.lastOnlineTime = DateTime.Now.ToString("MM/dd/yyyyTHH:mm:ss");
+		this.beans = new List<BeanData>();
+
+		// Upgrade Page Data
+		// // Upgrades
+		this.brewTimeCostReducer = 0;
+		this.coffeeSellPriceInc = 0;
+		this.growthCostReducer = 0;
+		this.growthRateMultiplier = 1.00f;
+		this.investorEffectiveness = 0.02f;
+		this.investorIncomeBoost = 0;
+		this.sellTimeCostReducer = 0;
+		this.upgPriceReducer = 0;
+		// // Counts
+		this.brewTimeCostReducerCount = 1;
+		this.coffeeSellPriceIncCount = 1;
+		this.growthCostReducerCount = 1;
+		this.growthRateMultiplierCount = 1;
+		this.investorEffectivenessCount = 1;
+		this.investorIncomeBoostCount = 1;
+		this.sellTimeCostReducerCount = 1;
+		this.upgPriceReducerCount = 1;
+
+		// Investor Page Data
+		// // Upgrades
+		this.inv_growthRateMultiplier = 1.00f;
+		this.inv_speedPerTap = 0;
+		this.inv_upgPriceReducer = 0;
+		this.inv_freeBrewChance = 0;
+		this.inv_freeUpgChance = 0;
+		this.inv_profitBonus = 0;
 		this.inv_upgStartCnt = 0;
-		this.brewCapacityUpgrades = 1;
-		this.coffeeTimerReduceAmount = 0.25f;
+		//public float inv_coffeeSellPriceInc;
+		// // Counts
+		this.inv_freeBrewChanceCount = 1;
+		this.inv_freeUpgChanceCount = 1;
+		this.inv_growthRateMultiplierCount = 1;
+		this.inv_profitBonusCount = 1;
+		this.inv_speedPerTapCount = 1;
+		this.inv_upgPriceReducerCount = 1;
+		this.inv_upgStartCntCount = 1;
+		//public int inv_coffeeSellPriceIncCount;
+
+		// Coffee Brew Page Data
 		this.brewCapacity = 1;
+		this.brewCapacityUpgrades = 1;
 		this.brewCapacityUpgPrice = 50;
 		this.brewSpeedUpgPrice = 1000;
+		this.coffeeTimerReduceAmount = 0.25f;
 
-		this.custCapacityUpgrades = 1;
-		this.customerTimerReduceAmount = 0.25f;
+		// Customer Page Data
 		this.custCapacity = 1;
+		this.custCapacityUpgrades = 1;
 		this.custCapacityUpgPrice = 50;
+		this.customerTimerReduceAmount = 0.25f;
 		this.serveSpeedUpgPrice = 1000;
 
-		this.beans = new List<BeanData>();
 		fillBeans();
 	}
-
 
 }
 
