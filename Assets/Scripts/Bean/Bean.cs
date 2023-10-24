@@ -77,6 +77,7 @@ public class Bean : MonoBehaviour
                 break;
             case 2: // "Next"
                 multiBuyNum = timeReductionInterval - upgradeCount;
+
                 break;
             case 3: // "Max"
                 multiBuyNum = CalculateMaxGenerators();

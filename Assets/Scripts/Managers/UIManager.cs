@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     private CanvasGroup beansPageCG;
     private CanvasGroup coffeePageCG;
     private CanvasGroup customerPageCG;
+    public int currPage;
 
     // Start is called before the first frame update
     void Start()
@@ -40,9 +41,9 @@ public class UIManager : MonoBehaviour
         coffeePageCG = coffeePage.GetComponent<CanvasGroup>();
         customerPageCG = customerPage.GetComponent<CanvasGroup>();
 
-        ToggleCanvasGroup(coffeePageCG, false);
-        ToggleCanvasGroup(beansPageCG, true);
-        ToggleCanvasGroup(customerPageCG, false);
+        currPage = 0;
+
+        SetActivePage();
     }
 
     // Update is called once per frame
@@ -122,25 +123,50 @@ public class UIManager : MonoBehaviour
         footer.SetActive(true);
     }
 
-    public void OpenBeansPage()
+    //public void OpenBeansPage()
+    //{
+    //    ToggleCanvasGroup(beansPageCG, true);
+    //    ToggleCanvasGroup(coffeePageCG, false);
+    //    ToggleCanvasGroup(customerPageCG, false);
+    //}
+
+    //public void OpenCoffeePage()
+    //{
+    //    ToggleCanvasGroup(beansPageCG, false);
+    //    ToggleCanvasGroup(coffeePageCG, true);
+    //    ToggleCanvasGroup(customerPageCG, false);
+    //}
+
+    //public void OpenCustomerPage()
+    //{
+    //    ToggleCanvasGroup(beansPageCG, false);
+    //    ToggleCanvasGroup(coffeePageCG, false);
+    //    ToggleCanvasGroup(customerPageCG, true);
+    //}
+
+    public void NavLeftPage()
     {
-        ToggleCanvasGroup(beansPageCG, true);
-        ToggleCanvasGroup(coffeePageCG, false);
-        ToggleCanvasGroup(customerPageCG, false);
+        if(currPage > 0)
+        {
+            currPage--;
+        }
+        SetActivePage();
     }
 
-    public void OpenCoffeePage()
+    public void NavRightPage()
     {
-        ToggleCanvasGroup(beansPageCG, false);
-        ToggleCanvasGroup(coffeePageCG, true);
-        ToggleCanvasGroup(customerPageCG, false);
+        if (currPage < 2)
+        {
+            currPage++;
+        }
+        SetActivePage();
     }
 
-    public void OpenCustomerPage()
+    public void SetActivePage()
     {
-        ToggleCanvasGroup(beansPageCG, false);
-        ToggleCanvasGroup(coffeePageCG, false);
-        ToggleCanvasGroup(customerPageCG, true);
+        ToggleCanvasGroup(beansPageCG, (currPage == 0));
+        ToggleCanvasGroup(coffeePageCG, (currPage == 1));
+        ToggleCanvasGroup(customerPageCG, (currPage == 2));
     }
 
     public void OpenConfirmationPanel()
