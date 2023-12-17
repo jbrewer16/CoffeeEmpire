@@ -26,7 +26,7 @@ public class Bean : MonoBehaviour
     public bool growClicked;
     public bool unlocked;
 
-    private int growCount;
+    public int growCount;
     private int upgradeMultiplier = 0;
     private int currentStageUpgradeCount = 1;
     public int timeReductionInterval = 25;
@@ -55,6 +55,7 @@ public class Bean : MonoBehaviour
 
     private void Update()
     {
+
         if (unlocked && (hasManager || growClicked))
         {
             timer -= Time.deltaTime;

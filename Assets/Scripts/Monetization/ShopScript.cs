@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using UnityEngine.Purchasing.Extension;
 
-public class ShopScript : MonoBehaviour, IStoreListener
+public class ShopScript : MonoBehaviour, IDetailedStoreListener
 {
 
     public GameObject gameManagerObj;
@@ -13,7 +14,6 @@ public class ShopScript : MonoBehaviour, IStoreListener
     public ConsumableItem cItem;
     public ConsumableItem gems_10;
     public ConsumableItem gems_55;
-    public ConsumableItem gems_25;
     public ConsumableItem gems_115;
     public ConsumableItem gems_250;
     public ConsumableItem gems_650;
@@ -22,7 +22,6 @@ public class ShopScript : MonoBehaviour, IStoreListener
     IStoreController m_StoreController;
 
     // Start is called before the first frame update
-    [Obsolete]
     void Start()
     {
         gameManager = gameManagerObj.GetComponent<GameManager>();
@@ -30,7 +29,6 @@ public class ShopScript : MonoBehaviour, IStoreListener
         SetupBuilder();
     }
 
-    [Obsolete]
     public void SetupBuilder()
     {
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
@@ -109,7 +107,7 @@ public class ShopScript : MonoBehaviour, IStoreListener
         gems_115 = new ConsumableItem("115 Gems", "115_gems", "Get 115 Gems", 9.99f);
         gems_250 = new ConsumableItem("250 Gems", "250_gems", "Get 250 Gems", 19.99f);
         gems_650 = new ConsumableItem("650 Gems", "650_gems", "Get 650 Gems", 49.99f);
-        gems_1500 = new ConsumableItem("1500 Gems", "1500_gems", "Get 1500 Gems", 0.99f);
+        gems_1500 = new ConsumableItem("1500 Gems", "1500_gems", "Get 1500 Gems", 99.99f);
     }
 
     public void Buy_10_Gems()
@@ -163,6 +161,10 @@ public class ShopScript : MonoBehaviour, IStoreListener
         gameManager.AddGems(1500);
     }
 
+    public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 [Serializable]

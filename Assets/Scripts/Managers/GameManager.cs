@@ -98,31 +98,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public float customerTimerReduceAmount;
 	public float serveSpeedUpgPrice;
 
-	//public double money;
-	//public double totalMoneyEarned; //Money earned this prestige
-	//public double lifetimeEarnings; //All money earned since the beginning
-	//public float investorEffectiveness;
-	//public float investorIncomeBoost;
-	//public float growthRateMultiplier;
-	//public float inv_growthRateMultiplier;
-	//public float growthCostReducer;
-	//public float upgPriceReducer;
-	//public float brewTimeCostReducer;
-	//public float sellTimeCostReducer;
-	//public float coffeeSellPriceInc;
-	//public float inv_coffeeSellPriceInc;
-	//public float inv_speedPerTap;
-	//public int inv_profitBonus;
-	//public int inv_freeUpgChance;
-	//public int inv_freeBrewChance;
-	//public float inv_upgPriceReducer;
-	//public int beanDensity;
-	//public double beanCnt;
-	//public double coffee;
-	//public int gems;
-	//public int prestigeLevel;
-	//public long investors;
-	//public int inv_upgStartCnt;
+
+	private bool gainsNotCalculated = false;
 
 
 	private void Awake()
@@ -139,25 +116,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 	private void Start()
 	{
-		// Initialize base stats
-		//money = 10;
-		//gems = 0;
-		//prestigeLevel = 1;
-		//investors = 0;
-		//investorEffectiveness = 0.02f;
-		//investorIncomeBoost = 0;
-		////costReducer = 0f;
-		//growthRateMultiplier = 1.00f;
-		//inv_growthRateMultiplier = 1.00f;
-		//inv_profitBonus = 0;
-		//inv_upgPriceReducer = 0;
-		//growthCostReducer = 0;
-		//brewTimeCostReducer = 0;
-		//sellTimeCostReducer = 0;
-		//coffeeSellPriceInc = 0;
-		//beanDensity = 0;
-		//beanCnt = 0;
-		//coffee = 0;
 
 		currentMultiBuyIndex = 0;
 		multiBuyOptions = new string[]{"1", "10", "Next", "Max"};
@@ -179,6 +137,13 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	{
 		// Update the money and gems UI display
 		updateText();
+
+        if(beans != null && beans[0].growCount > 0 && !gainsNotCalculated)
+        {
+			CalculateOfflineGains();
+			gainsNotCalculated = true;
+		}
+
 	}
 
 	public void updateText()
@@ -282,60 +247,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 	}
 
-	public void CalculateOfflineGains()
-    {
-		DateTime currentTime = DateTime.Now;
-		offlineDuration = currentTime - lastOnlineTime;
-
-		double totalBeansPerMinute = 0;
-
-		foreach(Bean bean in beans)
-        {
-            if (bean.unlocked)
-            {
-				double beansPerMinute = bean.CalculateProductionRate();
-				Debug.Log("beansPerMinute: " + beansPerMinute);
-				totalBeansPerMinute += beansPerMinute;
-            }
-        }
-
-		int totalMinutes = (int)Math.Floor(offlineDuration.TotalMinutes);
-
-		double offlineBeanGains = totalBeansPerMinute * totalMinutes;
-
-        double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
-
-		offlineMoneyGains = offlineCoffeeGains * customerManager.GetSellPrice();
-
-  //      Debug.Log("DateTime.Now: " + currentTime);
-		//Debug.Log("lastOnlineTime: " + lastOnlineTime);
-		//Debug.Log("Offline Duration: " + offlineDuration);
-		//Debug.Log("TotalBeansPerMinute: " + totalBeansPerMinute);
-		//Debug.Log("TotalMinutes: " + totalMinutes);
-		//Debug.Log("Offline Gains: " + offlineBeanGains);
-		//Debug.Log("offlineCoffeeGains: " + offlineCoffeeGains);
-		//Debug.Log("offlineMoneyGains: " + offlineMoneyGains);
-
-		offlineCounterTxt.text = "You were offline for \n" + offlineDuration;
-		earningsTxt.text = "You earned \n$" + offlineMoneyGains + " \nWhile you were away!";
-		watchAdTxt.text = "Watch an ad for double earnings! \n($" + (offlineMoneyGains * 2) + ")";
-
-		offlineEarningsPanel.SetActive(true);
-
-	}
-
-	public void OfflineContinueBtn()
-    {
-		AddMoney(offlineMoneyGains);
-		offlineEarningsPanel.SetActive(false);
-    }
-
-	public void OfflineAdButton()
-    {
-		AddMoney(offlineMoneyGains * 2);
-		offlineEarningsPanel.SetActive(false);
-	}
-
 	public void SaveData(ref GameData data)
     {
 
@@ -404,6 +315,70 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		data.customerTimerReduceAmount		= customerManager.timerReduceAmount;
 		data.serveSpeedUpgPrice				= customerManager.serveSpeedUpgPrice;
 
+	}
+
+	public void CalculateOfflineGains()
+	{
+		DateTime currentTime = DateTime.Now;
+		offlineDuration = currentTime - lastOnlineTime;
+
+		if(offlineDuration.TotalSeconds < 0)
+        {
+			Debug.Log("Woah there, something seems strange did you invent a time machine? Wouldn't travel back anymore or your data may be deleted...");
+        } else if(offlineDuration.TotalMinutes > 5)
+        {
+			double totalBeansPerMinute = 0;
+
+			int unlockedBeans = 0;
+
+			foreach (Bean bean in beans)
+			{
+				if (bean.unlocked)
+				{
+					double beansPerMinute = bean.CalculateProductionRate();
+					//Debug.Log("beansPerMinute: " + beansPerMinute);
+					totalBeansPerMinute += beansPerMinute;
+					unlockedBeans++;
+				}
+			}
+
+			int totalMinutes = (int)Math.Floor(offlineDuration.TotalMinutes);
+
+			double offlineBeanGains = totalBeansPerMinute * totalMinutes;
+
+			double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
+
+			offlineMoneyGains = offlineCoffeeGains * customerManager.GetSellPrice();
+
+			//Debug.Log("DateTime.Now: " + currentTime);
+			//Debug.Log("Unlocked Beans: " + unlockedBeans);
+			//Debug.Log("lastOnlineTime: " + lastOnlineTime);
+			//Debug.Log("Offline Duration: " + offlineDuration);
+			//Debug.Log("TotalBeansPerMinute: " + totalBeansPerMinute);
+			//Debug.Log("TotalMinutes: " + totalMinutes);
+			//Debug.Log("Offline Gains: " + offlineBeanGains);
+			//Debug.Log("offlineCoffeeGains: " + offlineCoffeeGains);
+			//Debug.Log("offlineMoneyGains: " + offlineMoneyGains);
+
+			offlineCounterTxt.text = "You were offline for \n" + offlineDuration;
+			earningsTxt.text = "You earned \n$" + offlineMoneyGains + " \nWhile you were away!";
+			watchAdTxt.text = "Watch an ad for double earnings! \n($" + (offlineMoneyGains * 2) + ")";
+
+			offlineEarningsPanel.SetActive(true);
+		}
+
+	}
+
+	public void OfflineContinueBtn()
+	{
+		AddMoney(offlineMoneyGains);
+		offlineEarningsPanel.SetActive(false);
+	}
+
+	public void OfflineAdButton()
+	{
+		AddMoney(offlineMoneyGains * 2);
+		offlineEarningsPanel.SetActive(false);
 	}
 
 	public void AddToBeanScriptList(Bean b)
