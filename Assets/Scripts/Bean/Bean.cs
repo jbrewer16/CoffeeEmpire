@@ -6,34 +6,34 @@ using UnityEngine.UI;
 
 public class Bean : MonoBehaviour
 {
-    public GameObject gameManagerObj;
-    public GameObject unlockPanel;
-    public Slider timerSlider;
-    public Slider beanUpgSlider;
-    public TMP_Text growCountText;
-    public TMP_Text upgradeCostText;
-    public TMP_Text timeToGrowText;
-    public TMP_Text upgradeCounterText;
-    public TMP_Text unlockPriceText;
-    public GameManager gameManager;
-    public int baseGrowCount;
-    public int upgradeCount;
-    public int unlockPrice;
-    public string beanName;
-    public float initialUpgradeCost;
-    public float timeToGrow;
-    public float upgradeCoefficient;
-    public bool growClicked;
-    public bool unlocked;
-
-    public int growCount;
-    private int upgradeMultiplier = 0;
-    private int currentStageUpgradeCount = 1;
-    public int timeReductionInterval = 25;
-    private int multiBuyNum = 1;
+    public int          id;
+    public int          baseGrowCount;
+    public int          growCount;
+    public int          timeReductionInterval = 25;
+    public int          upgradeCount;
+    public double       unlockPrice;
+    private int         currentStageUpgradeCount = 1;
+    public string       beanName;
+    public Slider       beanUpgSlider;
+    public Slider       timerSlider;
+    public GameManager  gameManager;
+    public GameObject   gameManagerObj;
+    public GameObject   unlockPanel;
+    public bool         growClicked;
+    public bool         unlocked;
+    public TMP_Text     growCountText;
+    public TMP_Text     timeToGrowText;
+    public TMP_Text     upgradeCostText;
+    public TMP_Text     upgradeCounterText;
+    public TMP_Text     unlockPriceText;
+    public float        initialUpgradeCost;
+    public float        timeToGrow;
+    public float        upgradeCoefficient;   
+    private bool        hasManager;
+    private int         multiBuyNum = 1;
+    private int         upgradeMultiplier = 0;
+    private float       timer;
     private const float TimeReductionFactor = 0.5f;
-    private float timer;
-    private bool hasManager;
 
     private void Start()
     {

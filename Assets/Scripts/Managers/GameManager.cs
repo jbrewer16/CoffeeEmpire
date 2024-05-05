@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 {
 	public static GameManager Instance { get; private set; }
 	public GameObject prestigeSystemObj;
+	public GameObject offlineWatchAdBtn;
 	public PrestigeSystem prestigeSystem;
 	public CoffeeManager coffeeManager;
 	public CustomerManager customerManager;
@@ -31,7 +32,9 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public int currentMultiBuyIndex;
 
 	public double offlineMoneyGains;
+	public double offlineMoneyGainsWithAd;
 	public TimeSpan offlineDuration;
+	public float offlineMaxHours;
 
 	// General Player Data
 	public double beanCnt;
@@ -44,6 +47,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public int prestigeLevel;
 	public long investors;
 	public DateTime lastOnlineTime;
+	public List<int> baristas;
 
 	// Upgrade Page Data
 	public float brewTimeCostReducer;
@@ -122,6 +126,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 		prestigeSystem = prestigeSystemObj.GetComponent<PrestigeSystem>();
 
+		offlineMaxHours = 2;
+
 		// Initialize unlocked beans array (assuming there are 10 beans in total)
 		unlockedBeans = new bool[10];
 
@@ -190,6 +196,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		this.prestigeLevel							= data.prestigeLevel;
 		this.investors								= data.investors;
 		this.lastOnlineTime							= DateTime.ParseExact(data.lastOnlineTime, "MM/dd/yyyyTHH:mm:ss", null);
+		this.baristas								= data.baristas;
 
 		// Upgrade Page Data
 		// // Upgrades
@@ -261,6 +268,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		data.prestigeLevel					= this.prestigeLevel;
 		data.investors						= this.investors;
 		data.lastOnlineTime					= DateTime.Now.ToString("MM/dd/yyyyTHH:mm:ss");
+		data.baristas						= this.baristas;
 
 		// Upgrade Page Data
 		// // Upgrades
@@ -273,14 +281,14 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		data.sellTimeCostReducer			= this.sellTimeCostReducer;
 		data.upgPriceReducer				= this.upgPriceReducer;
 		// // Counts
-		data.brewTimeCostReducerCount			= this.brewTimeCostReducerCount;
-		data.coffeeSellPriceIncCount			= this.coffeeSellPriceIncCount;
-		data.growthCostReducerCount				= this.growthCostReducerCount;
-		data.growthRateMultiplierCount			= this.growthRateMultiplierCount;
-		data.investorEffectivenessCount			= this.investorEffectivenessCount;
-		data.investorIncomeBoostCount			= this.investorIncomeBoostCount;
-		data.sellTimeCostReducerCount			= this.sellTimeCostReducerCount;
-		data.upgPriceReducerCount				= this.upgPriceReducerCount;
+		data.brewTimeCostReducerCount		= this.brewTimeCostReducerCount;
+		data.coffeeSellPriceIncCount		= this.coffeeSellPriceIncCount;
+		data.growthCostReducerCount			= this.growthCostReducerCount;
+		data.growthRateMultiplierCount		= this.growthRateMultiplierCount;
+		data.investorEffectivenessCount		= this.investorEffectivenessCount;
+		data.investorIncomeBoostCount		= this.investorIncomeBoostCount;
+		data.sellTimeCostReducerCount		= this.sellTimeCostReducerCount;
+		data.upgPriceReducerCount			= this.upgPriceReducerCount;
 
 		// Investor Page Data
 		// // Upgrades
@@ -324,7 +332,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 		if(offlineDuration.TotalSeconds < 0)
         {
-			Debug.Log("Woah there, something seems strange did you invent a time machine? Wouldn't travel back anymore or your data may be deleted...");
+			Debug.Log("Woah there, something seems strange, did you invent a time machine? Wouldn't travel back anymore or your data may be deleted...");
         } else if(offlineDuration.TotalMinutes > 5)
         {
 			double totalBeansPerMinute = 0;
@@ -342,29 +350,55 @@ public class GameManager : MonoBehaviour, IDataPersistence
 				}
 			}
 
+			int offlineMaxMinutes = (int)offlineMaxHours * 60;
 			int totalMinutes = (int)Math.Floor(offlineDuration.TotalMinutes);
 
-			double offlineBeanGains = totalBeansPerMinute * totalMinutes;
+			if (totalMinutes > offlineMaxMinutes)
+            {
+				// Gains without ad
+				int totalMinutesWithoutAd = offlineMaxMinutes;
+				double offlineBeanGains = totalBeansPerMinute * totalMinutesWithoutAd;
+				double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
+				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * 0.25);
 
-			double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
+				// Gains with ad
+				int offlineMaxMinutesWithAd = offlineMaxMinutes + 60;
+				int totalMinutesWithAd = Math.Min(totalMinutes, offlineMaxMinutesWithAd);
+				double offlineBeanGainsWithAd = totalBeansPerMinute * totalMinutesWithAd;
+				double offineCoffeeGainsWithAd = Mathf.Floor((float)(offlineBeanGainsWithAd / coffeeManager.GetBeansPerCup()));
+				offlineMoneyGainsWithAd = Math.Round((offineCoffeeGainsWithAd * customerManager.GetSellPrice()) * 0.25);
 
-			offlineMoneyGains = offlineCoffeeGains * customerManager.GetSellPrice();
-
-			//Debug.Log("DateTime.Now: " + currentTime);
-			//Debug.Log("Unlocked Beans: " + unlockedBeans);
-			//Debug.Log("lastOnlineTime: " + lastOnlineTime);
-			//Debug.Log("Offline Duration: " + offlineDuration);
-			//Debug.Log("TotalBeansPerMinute: " + totalBeansPerMinute);
-			//Debug.Log("TotalMinutes: " + totalMinutes);
-			//Debug.Log("Offline Gains: " + offlineBeanGains);
-			//Debug.Log("offlineCoffeeGains: " + offlineCoffeeGains);
-			//Debug.Log("offlineMoneyGains: " + offlineMoneyGains);
-
-			offlineCounterTxt.text = "You were offline for \n" + offlineDuration;
-			earningsTxt.text = "You earned \n$" + offlineMoneyGains + " \nWhile you were away!";
-			watchAdTxt.text = "Watch an ad for double earnings! \n($" + (offlineMoneyGains * 2) + ")";
+				// Update display
+				int timeDifference = totalMinutesWithAd - totalMinutesWithoutAd;
+				offlineCounterTxt.text = "You were offline for \n" + offlineDuration.ToString(@"hh\:mm");
+				earningsTxt.text = "You earned \n$" + offlineMoneyGains + " \nWhile you were away!";
+				watchAdTxt.gameObject.SetActive(true);
+				offlineWatchAdBtn.SetActive(true);
+				watchAdTxt.text = "Watch an ad for extra earnings! + " + timeDifference + "min \n($" + offlineMoneyGainsWithAd + ")";
+			} else
+            {
+				double offlineBeanGains = totalBeansPerMinute * totalMinutes;
+				double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
+				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * 0.25);
+				offlineCounterTxt.text = "You were offline for \n" + offlineDuration.ToString(@"hh\:mm");
+				earningsTxt.text = "You earned \n$" + offlineMoneyGains + " \nWhile you were away!";
+				watchAdTxt.gameObject.SetActive(false);
+				offlineWatchAdBtn.SetActive(false);
+			}
 
 			offlineEarningsPanel.SetActive(true);
+
+
+   //         Debug.Log("DateTime.Now: " + currentTime);
+   //         Debug.Log("Unlocked Beans: " + unlockedBeans);
+   //         Debug.Log("lastOnlineTime: " + lastOnlineTime);
+   //         Debug.Log("Offline Duration: " + offlineDuration);
+   //         Debug.Log("TotalBeansPerMinute: " + totalBeansPerMinute);
+   //         Debug.Log("TotalMinutes: " + totalMinutes);
+			//Debug.Log("Offline Gains: " + offlineBeanGains);
+   //         Debug.Log("offlineCoffeeGains: " + offlineCoffeeGains);
+   //         Debug.Log("offlineMoneyGains: " + offlineMoneyGains);
+
 		}
 
 	}
@@ -377,7 +411,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 	public void OfflineAdButton()
 	{
-		AddMoney(offlineMoneyGains * 2);
+		AddMoney(offlineMoneyGainsWithAd);
 		offlineEarningsPanel.SetActive(false);
 	}
 

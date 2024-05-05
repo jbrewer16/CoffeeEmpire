@@ -74,13 +74,16 @@ public class DataPersistenceManager : MonoBehaviour
     public void SaveGame()
     {
         // pass the data to other scripts so they can update it
-        foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjs)
+        if(dataPersistenceObjs != null)
         {
-            dataPersistenceObj.SaveData(ref gameData);
-        }
+            foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjs)
+            {
+                dataPersistenceObj.SaveData(ref gameData);
+            }
 
-        // Save the data to file
-        dataHandler.Save(gameData);
+            // Save the data to file
+            dataHandler.Save(gameData);
+        }
 
     }
 

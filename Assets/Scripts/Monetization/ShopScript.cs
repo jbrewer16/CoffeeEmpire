@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
 
@@ -19,18 +20,25 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
     public ConsumableItem gems_650;
     public ConsumableItem gems_1500;
 
+    public TMP_Text debugText;
+
     IStoreController m_StoreController;
 
     // Start is called before the first frame update
     void Start()
     {
+        addDebugLine("Start! 1");
         gameManager = gameManagerObj.GetComponent<GameManager>();
+        addDebugLine("Start! 2");
         FillItemData();
+        addDebugLine("Start! 3");
         SetupBuilder();
+        addDebugLine("Start! 4");
     }
 
     public void SetupBuilder()
     {
+        addDebugLine("SetupBuilder! 1");
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
         builder.AddProduct(cItem.id, ProductType.Consumable);
         builder.AddProduct(gems_10.id, ProductType.Consumable);
@@ -40,23 +48,28 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
         builder.AddProduct(gems_650.id, ProductType.Consumable);
         builder.AddProduct(gems_1500.id, ProductType.Consumable);
 
-
+        addDebugLine("SetupBuilder! 2");
         UnityPurchasing.Initialize(this, builder);
+        addDebugLine("SetupBuilder! 3");
     }
 
     public void Consumable_Btn_Pressed()
     {
+        addDebugLine("Consumable_Btn_Pressed! 1");
         m_StoreController.InitiatePurchase(cItem.id);
+        addDebugLine("Consumable_Btn_Pressed! 2");
         //gameManager.AddGems(10);
     }
 
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent)
     {
+        addDebugLine("ProcessPurchase! 1");
         var product = purchaseEvent.purchasedProduct;
         print("Purchase Complete: " + product.definition.id);
-        
-        if(product.definition.id == gems_10.id)
+        addDebugLine("Purchase Complete: " + product.definition.id);
+
+        if (product.definition.id == gems_10.id)
         {
             gameManager.AddGems(10);
         } else if(product.definition.id == gems_55.id)
@@ -76,26 +89,31 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
             gameManager.AddGems(1500);
         }
 
+        addDebugLine("ProcessPurchase! 2");
         return PurchaseProcessingResult.Complete;
     }
 
     public void OnInitializeFailed(InitializationFailureReason error)
     {
-        print("Initialize Faild: " + error);
+        addDebugLine("Initialize Failed: " + error);
+        print("Initialize Failed: " + error);
     }
 
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
-        print("Initialize Faild: " + error + message);
+        addDebugLine("Initialize Failed: " + error + message);
+        print("Initialize Failed: " + error + message);
     }
 
     public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
     {
+        addDebugLine("Purchase Failed" + failureReason);
         print("Purchase Failed" + failureReason);
     }
 
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
+        addDebugLine("Success");
         print("Success");
         m_StoreController = controller;
     }
@@ -163,7 +181,13 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
 
     public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
     {
+        addDebugLine("Purchase Failed" + failureDescription);
         throw new NotImplementedException();
+    }
+
+    public void addDebugLine(string line)
+    {
+        debugText.text = debugText.text + line + '\n';
     }
 }
 

@@ -9,12 +9,14 @@ public class CoffeeManager : MonoBehaviour
 {
 
     public GameObject gameManagerObj;
-    public Slider timerSlider;
+    public Animator coffeeAnimator;
+    public Slider brewTimer;
     public TMP_Text timerTxt;
     public TMP_Text brewSpeedPriceTxt;
     public TMP_Text brewCapacityPriceTxt;
     public TMP_Text capacityTxt;
 
+    public float originalBrewSpeed;
     public float brewSpeed;
     public float brewSpeedUpgPrice;
     public float brewCapacityUpgPrice;
@@ -29,9 +31,15 @@ public class CoffeeManager : MonoBehaviour
     private int beanPerCup = 16;
     private int tempCap = 1;
 
+    private bool isSpeedBoosted = false;
+    private float speedBoostMultiplier = 2.0f;
+    private float boostDuration = 0.25f;
+    private float currentBoostTimer;
+
     // Start is called before the first frame update
     void Start()
     {
+        originalBrewSpeed = 10;
         brewSpeed = 10;
         //brewSpeedUpgPrice = 1000;
         //brewCapacityUpgPrice = 50;
@@ -45,24 +53,38 @@ public class CoffeeManager : MonoBehaviour
         capacityTxt.text = brewCapacity + " Cup";
         brewSpeedPriceTxt.text = GlobalFunctions.FormatNumber(brewSpeedUpgPrice, true);//"$" + brewSpeedUpgPrice;
         brewCapacityPriceTxt.text = GlobalFunctions.FormatNumber(brewCapacityUpgPrice, true);//"$" + brewCapacityUpgPrice;
-        timerSlider.maxValue = timer;
-        timerSlider.value = timer;
+        brewTimer.maxValue = timer;
+        brewTimer.value = timer;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(gameManager.beanCnt >= (beanPerCup - gameManager.beanDensity))
+        brewTimer.maxValue = brewSpeed;
+        //float currentSpeedMultiplier = isSpeedBoosted ? (speedBoostMultiplier + gameManager.inv_speedPerTap) : 1;
+        //if (isSpeedBoosted)
+        //{
+        //    Debug.Log(currentSpeedMultiplier);
+        //}
+
+        if (gameManager.beanCnt >= (beanPerCup - gameManager.beanDensity))
         {
-            timer -= Time.deltaTime;
-            timerSlider.value = timer;
+            timer -= Time.deltaTime * GetCurrentSpeedMultiplier();
+            brewTimer.value = timer;
             if (timer <= 0f)
             {
                 brewCoffee();
                 ResetTimer();
             }
+            //coffeeAnimator.speed = 1;
+            coffeeAnimator.speed = CalculateAnimationSpeed();
+        } else
+        {
+            coffeeAnimator.Play("CoffeeAnimation", 0, 0);
+            coffeeAnimator.speed = 0;
         }
         UpdateText();
+        UpdateBoostTimer();
     }
 
     //public double CalculateProductionRate()
@@ -72,15 +94,40 @@ public class CoffeeManager : MonoBehaviour
     //}
     public void UpdateText()
     {
-        timerTxt.text = timer + "s";
+        timerTxt.text = timer.ToString("0.00") + "s";
         capacityTxt.text = brewCapacity + " Cup";
         brewSpeedPriceTxt.text = GlobalFunctions.FormatNumber(brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer), true);//"$" + (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer));
         brewCapacityPriceTxt.text = GlobalFunctions.FormatNumber(brewCapacityUpgPrice, true);//"$" + brewCapacityUpgPrice;
     }
 
+    void UpdateBoostTimer()
+    {
+        if (isSpeedBoosted)
+        {
+            currentBoostTimer -= Time.deltaTime;
+            if (currentBoostTimer <= 0)
+            {
+                isSpeedBoosted = false;
+            }
+        }
+    }
+
+    float GetCurrentSpeedMultiplier()
+    {
+        return isSpeedBoosted ? (speedBoostMultiplier + gameManager.inv_speedPerTap) : 1;
+    }
+
+    float CalculateAnimationSpeed()
+    {
+        // Calculate normal animation speed to match the base timer duration
+        float baseSpeed = originalBrewSpeed / brewSpeed;
+        return baseSpeed * GetCurrentSpeedMultiplier();
+    }
+
     private void ResetTimer()
     {
         timer = brewSpeed;
+        brewTimer.value = timer;
     }
 
     private void brewCoffee()
@@ -109,6 +156,7 @@ public class CoffeeManager : MonoBehaviour
         {
             gameManager.SpendMoney((brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer)));
             brewSpeed -= 0.15f;
+            brewTimer.maxValue = brewSpeed;
             CalculateSpeedUpgPrice();
             UpdateText();
         }
@@ -128,8 +176,16 @@ public class CoffeeManager : MonoBehaviour
 
     public void reduceBrewTimer()
     {
+        if (gameManager.beanCnt >= (beanPerCup - gameManager.beanDensity))
+        {
+            if (!isSpeedBoosted)
+            {
+                currentBoostTimer = boostDuration;
+                isSpeedBoosted = true;
+            }
+            //timer -= (timerReduceAmount + gameManager.inv_speedPerTap);
+        }
         //timer -= (float)(timer * 0.15);
-        timer -= (timerReduceAmount + gameManager.inv_speedPerTap);
     }
 
     public void resetCoffee()

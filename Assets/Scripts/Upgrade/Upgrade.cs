@@ -156,73 +156,87 @@ public class Upgrade : MonoBehaviour
 
     public void buyUpgrade()
     {
-        float upgCost = CalculateUpgradeCost(); // (int)(initialCost + (initialCost * Mathf.Pow(upgradeCostMultiplier, (currentUpgrade - 1))));
-        //if (gameManager.money >= upgCost)
+        float upgCost = CalculateUpgradeCost();
+        bool upgradePurchased = false;
+
         switch (upgTypes)
         {
             case UpgType.cash:
-                int freeChance = Random.Range(0, 100);
-                bool freeUpg = freeChance < gameManager.inv_freeUpgChance;
-                if (!freeUpg)
+                if(gameManager.money >= upgCost)
                 {
-                    gameManager.SpendMoney(upgCost);
-                }
-                else
-                {
-                    Debug.Log("Congrats! Free Upgrade!");
+                    int freeChance = Random.Range(0, 100);
+                    bool freeUpg = freeChance < gameManager.inv_freeUpgChance;
+                    if (!freeUpg)
+                    {
+                        gameManager.SpendMoney(upgCost);
+                    }
+                    else
+                    {
+                        Debug.Log("Congrats! Free Upgrade!");
+                    }
+                    upgradePurchased = true;
                 }
                 break;
             case UpgType.investor:
-                gameManager.SpendInvestors((int)upgCost);
+                if(gameManager.investors >= upgCost)
+                {
+                    gameManager.SpendInvestors((int)upgCost);
+                    upgradePurchased = true;
+                }
                 break;
         }
-        
+
+        if (upgradePurchased)
         {
-            currentUpgrade++; 
-            switch (upgOptions)
-            {
-                case UpgOptions.growthMult:
-                    gameManager.AddGrowthRateMultiplier();
-                    break;
-                case UpgOptions.growthCost:
-                    gameManager.AddGrowthCostReducer();
-                    break;
-                case UpgOptions.beanDensity:
-                    gameManager.AddBeanDensity();
-                    break;
-                case UpgOptions.brewTime:
-                    gameManager.ReduceBrewTimeCost();
-                    break;
-                case UpgOptions.sellTime:
-                    gameManager.ReduceSellTimeCost();
-                    break;
-                case UpgOptions.coffeeSellPrice:
-                    gameManager.AddCoffeeSellPrice();
-                    break;
-
-                case UpgOptions.inv_startUpgCount:
-                    gameManager.AddInvUpgStartCount();
-                    break;
-                case UpgOptions.inv_profitBonus:
-                    gameManager.AddInvProfitBonus();
-                    break;
-                case UpgOptions.inv_upgPriceReducer:
-                    gameManager.AddInvUpgPriceReducer();
-                    break;
-                case UpgOptions.inv_speedIncreasePerTap:
-                    gameManager.AddInvSpeedPerTap();
-                    break;
-                case UpgOptions.inv_freeUpgChance:
-                    gameManager.AddInvFreeUpgChance();
-                    break;
-                case UpgOptions.inv_freeBrewChance:
-                    gameManager.AddInvFreeBrewChance();
-                    break;
-                default:
-                    break;
-            }
-
+            currentUpgrade++;
+            ApplyUpgradeOptions();
             btnTxt.text = "Upgrade \n $" + initialCost;
+        }
+    }
+
+    private void ApplyUpgradeOptions()
+    {
+        switch (upgOptions)
+        {
+            case UpgOptions.growthMult:
+                gameManager.AddGrowthRateMultiplier();
+                break;
+            case UpgOptions.growthCost:
+                gameManager.AddGrowthCostReducer();
+                break;
+            case UpgOptions.beanDensity:
+                gameManager.AddBeanDensity();
+                break;
+            case UpgOptions.brewTime:
+                gameManager.ReduceBrewTimeCost();
+                break;
+            case UpgOptions.sellTime:
+                gameManager.ReduceSellTimeCost();
+                break;
+            case UpgOptions.coffeeSellPrice:
+                gameManager.AddCoffeeSellPrice();
+                break;
+
+            case UpgOptions.inv_startUpgCount:
+                gameManager.AddInvUpgStartCount();
+                break;
+            case UpgOptions.inv_profitBonus:
+                gameManager.AddInvProfitBonus();
+                break;
+            case UpgOptions.inv_upgPriceReducer:
+                gameManager.AddInvUpgPriceReducer();
+                break;
+            case UpgOptions.inv_speedIncreasePerTap:
+                gameManager.AddInvSpeedPerTap();
+                break;
+            case UpgOptions.inv_freeUpgChance:
+                gameManager.AddInvFreeUpgChance();
+                break;
+            case UpgOptions.inv_freeBrewChance:
+                gameManager.AddInvFreeBrewChance();
+                break;
+            default:
+                break;
         }
     }
 

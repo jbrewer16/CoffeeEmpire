@@ -8,8 +8,10 @@ public class Barista : MonoBehaviour
 {
 
     public int cost;
+    public int id;
     public string baristaName;
     public string beanName;
+    public bool bought;
     public TMP_Text sellsBeanTxt;
     public TMP_Text costTxt;
     public TMP_Text baristaNameTxt;
@@ -31,9 +33,17 @@ public class Barista : MonoBehaviour
 
     private void Update()
     {
-        if(gameManager.money >= cost && bean.unlocked)
+        if (this.gameObject.activeSelf)
         {
-            buyButton.interactable = true;
+            if(gameManager.money >= cost && bean.unlocked)
+            {
+                buyButton.interactable = true;
+            }
+            if (bought)
+            {
+                this.gameObject.SetActive(false);
+                bean.SetManager(true);
+            }
         }
     }
 
@@ -44,6 +54,7 @@ public class Barista : MonoBehaviour
             gameManager.SpendMoney(cost);
             this.gameObject.SetActive(false);
             bean.SetManager(true);
+            this.gameManager.baristas.Add(id);
         }
     }
 

@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     public GameObject upgradesPanel;
     public GameObject investorsPanel;
     public GameObject shopPanel;
+    public GameObject debugPanel;
     //public GameObject confirmationPanel;
 
     private CanvasGroup beansPageCG;
@@ -35,6 +36,7 @@ public class UIManager : MonoBehaviour
         upgradesPanel.SetActive(false);
         investorsPanel.SetActive(false);
         shopPanel.SetActive(false);
+        debugPanel.SetActive(false);
         //confirmationPanel.SetActive(false);
 
         beansPageCG = beansPage.GetComponent<CanvasGroup>();
@@ -121,6 +123,16 @@ public class UIManager : MonoBehaviour
     {
         shopPanel.SetActive(false);
         footer.SetActive(true);
+    }
+
+    public void OpenDebugPanel()
+    {
+        debugPanel.SetActive(true);
+    }
+
+    public void CloseDebugPanel()
+    {
+        debugPanel.SetActive(false);
     }
 
     //public void OpenBeansPage()

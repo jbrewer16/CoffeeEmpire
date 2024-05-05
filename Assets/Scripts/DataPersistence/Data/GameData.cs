@@ -20,6 +20,7 @@ public class GameData
 	public long investors;
 	public string lastOnlineTime;
 	public List<BeanData> beans;
+	public List<int> baristas;
 
 	// Upgrade Page Data
 	// // Upgrades
@@ -86,21 +87,21 @@ public class GameData
 	/// </summary>
 	void fillBeans()
 	{
-		beans.Add(new BeanData("Arabica", 1, 4, 1, 0, 1.07f));
-		beans.Add(new BeanData("Espresso", 16, 20, 3, 250, 1.15f));
-		beans.Add(new BeanData("Mocha", 32, 40, 5, 500, 1.14f));
-		beans.Add(new BeanData("Chocolate", 64, 75, 10, 2000, 1.13f));
-		beans.Add(new BeanData("Irish Cream", 128, 200, 25, 5000, 1.12f));
-		beans.Add(new BeanData("Cinnamon", 256, 500, 45, 10000, 1.11f));
-		beans.Add(new BeanData("Maple", 512, 1000, 90, 25000, 1.1f));
-		beans.Add(new BeanData("Pumpkin Spice", 1024, 2500, 120, 50000, 1.09f));
-		beans.Add(new BeanData("Lava", 2048, 5000, 180, 150000, 1.08f));
-		beans.Add(new BeanData("Radioactive", 4096, 15000, 300, 500000, 1.07f));
-		beans.Add(new BeanData("Magical", 8192, 30000, 420, 750000, 1.06f));
-		beans.Add(new BeanData("Quantum", 16384, 75000, 600, 1500000, 1.05f));
-		beans.Add(new BeanData("Galactic", 32768, 250000, 900, 3750000, 1.04f));
-		beans.Add(new BeanData("Cosmic", 65536, 500000, 1500, 10000000, 1.03f));
-		beans.Add(new BeanData("Time Warp", 131072, 1000000, 1800, 25000000, 1.02f));
+		beans.Add(new BeanData(1, "Arabica",		1,		4,			1,		0,			1.07f));
+		beans.Add(new BeanData(2, "Espresso",		16,		20,			3,		250,		1.15f));
+		beans.Add(new BeanData(3, "Mocha",			32,		40,			5,		500,		1.14f));
+		beans.Add(new BeanData(4, "Chocolate",		64,		75,			10,		2000,		1.13f));
+		beans.Add(new BeanData(5, "Irish Cream",	128,	200,		25,		15000,		1.12f));
+		beans.Add(new BeanData(6, "Cinnamon",		256,	500,		45,		5e4,		1.11f));
+		beans.Add(new BeanData(7, "Maple",			512,	1000,		90,		2.5e6,		1.10f));
+		beans.Add(new BeanData(8, "Pumpkin Spice",	1024,	2500,		120,	5e8,		1.09f));
+		beans.Add(new BeanData(9, "Lava",			2048,	5000,		180,	1.5e10,		1.08f));
+		beans.Add(new BeanData(10,"Radioactive",	4096,	15000,		300,	5e12,		1.07f));
+		beans.Add(new BeanData(11,"Magical",		8192,	30000,		420,	7e14,		1.06f));
+		beans.Add(new BeanData(12,"Quantum",		16384,	75000,		600,	1.5e16,		1.05f));
+		beans.Add(new BeanData(13,"Galactic",		32768,	250000,		900,	3e18,		1.04f));
+		beans.Add(new BeanData(14,"Cosmic",			65536,	500000,		1500,	1e20,		1.03f));
+		beans.Add(new BeanData(15,"Time Warp",		131072, 1000000,	1800,	2e22,		1.02f));
 	}
 
 	/// <summary>
@@ -112,7 +113,7 @@ public class GameData
 	}
 
 	private void InitializeData()
-    {
+	{
 		//Debug.Log("Initializing Data!!!!!");
 		// General Player Data
 		this.beanCnt = 0;
@@ -126,6 +127,7 @@ public class GameData
 		this.investors = 0;
 		this.lastOnlineTime = DateTime.Now.ToString("MM/dd/yyyyTHH:mm:ss");
 		this.beans = new List<BeanData>();
+		this.baristas = new List<int>();
 
 		// Upgrade Page Data
 		// // Upgrades

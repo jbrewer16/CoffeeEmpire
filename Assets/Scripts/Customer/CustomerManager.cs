@@ -8,12 +8,14 @@ using System;
 public class CustomerManager : MonoBehaviour
 {
     public GameObject gameManagerObj;
+    public Animator customerAnimator;
     public Slider sellTimer;
     public TMP_Text timerTxt;
     public TMP_Text serveSpeedPriceTxt;
     public TMP_Text custCapacityPriceTxt;
     public TMP_Text custCapacityTxt;
 
+    public float originalServeSpeed;
     public float serveSpeed;
     public float serveSpeedUpgPrice;
     public float custCapacityUpgPrice;
@@ -28,10 +30,16 @@ public class CustomerManager : MonoBehaviour
     private int beanPerCup = 16;
     private int tempCap = 1;
 
+    private bool isSpeedBoosted = false;
+    private float speedBoostMultiplier = 2.0f;
+    private float boostDuration = 0.25f;
+    private float currentBoostTimer;
+
     // Start is called before the first frame update
     void Start()
     {
         sellPrice = 5;
+        originalServeSpeed = 10;
         serveSpeed = 10;
         //serveSpeedUpgPrice = 1000;
         //custCapacityUpgPrice = 50;
@@ -52,9 +60,12 @@ public class CustomerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        sellTimer.maxValue = serveSpeed;
+        //float currentSpeedMultiplier = isSpeedBoosted ? (speedBoostMultiplier + gameManager.inv_speedPerTap) : 1;
+
         if (gameManager.coffee >= 1)
         {
-            timer -= Time.deltaTime;
+            timer -= Time.deltaTime * GetCurrentSpeedMultiplier();
             sellTimer.value = timer;
 
             if (timer <= 0f)
@@ -62,22 +73,53 @@ public class CustomerManager : MonoBehaviour
                 sellCoffee();
                 ResetTimer();
             }
-
+            customerAnimator.speed = CalculateAnimationSpeed();
+        }
+        else
+        {
+            customerAnimator.Play("CustomerAnimation", 0, 0);
+            customerAnimator.speed = 0;
         }
         UpdateText();
+        UpdateBoostTimer();
     }
 
     public void UpdateText()
     {
-        timerTxt.text = timer + "s";
+        timerTxt.text = timer.ToString("0.00") + "s";
         custCapacityTxt.text = custCapacity + " Cup";
         serveSpeedPriceTxt.text = GlobalFunctions.FormatNumber(serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer), true);//"$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
         custCapacityPriceTxt.text = GlobalFunctions.FormatNumber(custCapacityUpgPrice, true);//"$" + custCapacityUpgPrice;
+    }
+    
+    void UpdateBoostTimer()
+    {
+        if (isSpeedBoosted)
+        {
+            currentBoostTimer -= Time.deltaTime;
+            if (currentBoostTimer <= 0)
+            {
+                isSpeedBoosted = false;
+            }
+        }
+    }
+
+    float GetCurrentSpeedMultiplier()
+    {
+        return isSpeedBoosted ? (speedBoostMultiplier + gameManager.inv_speedPerTap) : 1;
+    }
+
+    float CalculateAnimationSpeed()
+    {
+        // Calculate normal animation speed to match the base timer duration
+        float baseSpeed = originalServeSpeed / serveSpeed;
+        return baseSpeed * GetCurrentSpeedMultiplier();
     }
 
     private void ResetTimer()
     {
         timer = serveSpeed;
+        sellTimer.value = timer;
     }
 
     private void sellCoffee()
@@ -120,6 +162,7 @@ public class CustomerManager : MonoBehaviour
         {
             gameManager.SpendMoney((serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer)));
             serveSpeed -= 0.15f;
+            sellTimer.maxValue = serveSpeed;
             CalculateSpeedUpgPrice();
             UpdateText();
         }
@@ -139,8 +182,16 @@ public class CustomerManager : MonoBehaviour
 
     public void reduceSellTimer()
     {
+        if (gameManager.coffee >= 1)
+        {
+            if (!isSpeedBoosted)
+            {
+                currentBoostTimer = boostDuration;
+                isSpeedBoosted = true;
+            }
+            //timer -= (timerReduceAmount + gameManager.inv_speedPerTap);
+        }
         //timer -= (float)(timer * 0.15);
-        timer -= (timerReduceAmount + gameManager.inv_speedPerTap);
     }
 
     public void resetCustomer()

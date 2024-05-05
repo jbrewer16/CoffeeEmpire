@@ -71,6 +71,10 @@ public class BeanManager : MonoBehaviour, IDataPersistence
         beanScript.unlockPrice = beanData.unlockPrice;
         beanScript.upgradeCoefficient = beanData.upgradeCoefficient;
         beanScript.timeReductionInterval = beanData.timeReductionInterval;
+        if (gameManagerScript.baristas.Contains(beanData.id))
+        {
+            beanScript.SetManager(true);
+        }
 
         if (beanDataList.IndexOf(beanData) == 0)
         {
@@ -95,6 +99,7 @@ public class BeanManager : MonoBehaviour, IDataPersistence
 [System.Serializable]
 public class BeanData
 {
+    public int id;
     public string beanName;
     public int baseGrowCount;
     public int upgradeCost;
@@ -102,11 +107,12 @@ public class BeanData
     public int timeReductionInterval;
     public float timeToGrow;
     public float upgradeCoefficient;
-    public int unlockPrice;
+    public double unlockPrice;
     public bool unlocked;
 
-    public BeanData(string bName, int bGrowCount, int upgC, float tToGrow, int unlPrice, float upgCoefficient)
+    public BeanData(int i, string bName, int bGrowCount, int upgC, float tToGrow, double unlPrice, float upgCoefficient)
     {
+        id = i;
         beanName = bName;
         baseGrowCount = bGrowCount;
         upgradeCost = upgC;
