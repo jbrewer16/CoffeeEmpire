@@ -17,10 +17,19 @@ public static class GlobalFunctions
             if (value >= scales[i])
             {
                 double scaledValue = value / scales[i];
-                return prefix + ((asUSD) ? scaledValue.ToString("F2") : scaledValue.ToString("0")) + suffixes[i];
+                if (value < 1000 && !asUSD)
+                {
+                    return prefix + scaledValue.ToString("0") + suffixes[i];
+                }
+                else
+                {
+                    return prefix + scaledValue.ToString("F2") + suffixes[i];
+                }
+                //return prefix + ((asUSD) ? scaledValue.ToString("F2") : scaledValue.ToString("0")) + suffixes[i];
             }
         }
 
+        //return value.ToString("C2");
         return (asUSD) ? value.ToString("C2") : value.ToString("0");
     }
 }

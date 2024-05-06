@@ -4,6 +4,7 @@ using UnityEngine.Advertisements;
 public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
 {
     [SerializeField] RewardedAdsButton rewardedAdsButton;
+    [SerializeField] OfflineAdRewards offlineAdButton;
     [SerializeField] string _androidGameId;
     [SerializeField] string _iOSGameId;
     [SerializeField] bool _testMode = true;
@@ -34,6 +35,7 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
     {
         Debug.Log("Unity Ads initialization complete.");
         rewardedAdsButton.LoadAd();
+        offlineAdButton.LoadAd();
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)

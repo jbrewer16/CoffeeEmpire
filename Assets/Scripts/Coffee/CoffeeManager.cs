@@ -94,8 +94,8 @@ public class CoffeeManager : MonoBehaviour
     //}
     public void UpdateText()
     {
-        timerTxt.text = timer.ToString("0.00") + "s";
-        capacityTxt.text = brewCapacity + " Cup";
+        timerTxt.text = "";// timer.ToString("0.00") + "s";
+        capacityTxt.text = GlobalFunctions.FormatNumber(brewCapacity) + (brewCapacity > 1 ? " Cups" : " Cup");
         brewSpeedPriceTxt.text = GlobalFunctions.FormatNumber(brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer), true);//"$" + (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer));
         brewCapacityPriceTxt.text = GlobalFunctions.FormatNumber(brewCapacityUpgPrice, true);//"$" + brewCapacityUpgPrice;
     }
@@ -198,12 +198,20 @@ public class CoffeeManager : MonoBehaviour
         timerReduceAmount = 0.25f;
     }
 
+    //private float CalculateBrewCapacity()
+    //{
+    //    float percentageIncrease = 0.1f;
+    //    int newCapacity = brewCapacity + (int)Math.Ceiling(brewCapacity * percentageIncrease);
+    //    int increment = newCapacity - brewCapacity;
+    //    brewCapacity += increment < 1 ? 1 : increment;
+    //    return brewCapacity;
+    //}
+
     private float CalculateBrewCapacity()
     {
-        float percentageIncrease = 0.1f; // 3% increase
-        int newCapacity = brewCapacity + (int)Math.Ceiling(brewCapacity * percentageIncrease);
-        int increment = newCapacity - brewCapacity;
-        brewCapacity += increment < 1 ? 1 : increment;
+        float percentageIncrease = 0.1f;
+        int increment = (int)Math.Ceiling(brewCapacity * percentageIncrease);
+        brewCapacity += Math.Max(1, increment);
         return brewCapacity;
     }
 

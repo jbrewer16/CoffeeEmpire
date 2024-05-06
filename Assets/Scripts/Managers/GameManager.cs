@@ -409,9 +409,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		offlineEarningsPanel.SetActive(false);
 	}
 
-	public void OfflineAdButton()
+	public void HideOfflinePanel()
 	{
-		AddMoney(offlineMoneyGainsWithAd);
 		offlineEarningsPanel.SetActive(false);
 	}
 

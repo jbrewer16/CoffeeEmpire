@@ -86,7 +86,7 @@ public class CustomerManager : MonoBehaviour
 
     public void UpdateText()
     {
-        timerTxt.text = timer.ToString("0.00") + "s";
+        timerTxt.text = ""; // timer.ToString("0.00") + "s";
         custCapacityTxt.text = custCapacity + " Cup";
         serveSpeedPriceTxt.text = GlobalFunctions.FormatNumber(serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer), true);//"$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
         custCapacityPriceTxt.text = GlobalFunctions.FormatNumber(custCapacityUpgPrice, true);//"$" + custCapacityUpgPrice;
