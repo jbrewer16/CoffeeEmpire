@@ -4,17 +4,17 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class Barista : MonoBehaviour
+public class Harvester : MonoBehaviour
 {
 
-    public int cost;
+    public double cost;
     public int id;
-    public string baristaName;
+    public string harvesterName;
     public string beanName;
     public bool bought;
     public TMP_Text sellsBeanTxt;
     public TMP_Text costTxt;
-    public TMP_Text baristaNameTxt;
+    public TMP_Text harvesterNameTxt;
     public Bean bean;
     public GameObject gameManagerObj;
     public Button buyButton;
@@ -24,9 +24,9 @@ public class Barista : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        sellsBeanTxt.text = "Sells " + beanName;
+        sellsBeanTxt.text = "Harvests " + beanName;
         costTxt.text = GlobalFunctions.FormatNumber(cost, true);
-        baristaNameTxt.text = baristaName;
+        harvesterNameTxt.text = harvesterName;
         gameManager = gameManagerObj.GetComponent<GameManager>();
         buyButton.interactable = false;
     }
@@ -47,14 +47,14 @@ public class Barista : MonoBehaviour
         }
     }
 
-    public void buyBarista()
+    public void buyHarvester()
     {
         if(gameManager.money >= cost)
         {
             gameManager.SpendMoney(cost);
             this.gameObject.SetActive(false);
             bean.SetManager(true);
-            this.gameManager.baristas.Add(id);
+            this.gameManager.harvesters.Add(id);
         }
     }
 

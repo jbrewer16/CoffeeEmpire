@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
     public GameObject coffeePage;
     public GameObject customerPage;
     public GameObject hamburgerMenu;
-    public GameObject baristasPanel;
+    public GameObject harvestersPanel;
     public GameObject upgradesPanel;
     public GameObject investorsPanel;
     public GameObject shopPanel;
@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviour
         coffeePage.SetActive(true);
         customerPage.SetActive(true);
         hamburgerMenu.SetActive(false);
-        baristasPanel.SetActive(false);
+        harvestersPanel.SetActive(false);
         upgradesPanel.SetActive(false);
         investorsPanel.SetActive(false);
         shopPanel.SetActive(false);
@@ -65,25 +65,25 @@ public class UIManager : MonoBehaviour
         footer.SetActive(true);
     }
 
-    public void OpenBaristasPanel()
+    public void OpenHarvestersPanel()
     {
         hamburgerMenu.SetActive(false);
-        baristasPanel.SetActive(true);
+        harvestersPanel.SetActive(true);
         upgradesPanel.SetActive(false);
         investorsPanel.SetActive(false);
         shopPanel.SetActive(false);
     }
 
-    public void CloseBaristasPanel()
+    public void CloseHarvestersPanel()
     {
-        baristasPanel.SetActive(false);
+        harvestersPanel.SetActive(false);
         footer.SetActive(true);
     }
 
     public void OpenUpgradesPanel()
     {
         hamburgerMenu.SetActive(false);
-        baristasPanel.SetActive(false);
+        harvestersPanel.SetActive(false);
         upgradesPanel.SetActive(true);
         investorsPanel.SetActive(false);
         shopPanel.SetActive(false);
@@ -98,7 +98,7 @@ public class UIManager : MonoBehaviour
     public void OpenInvestorsPanel()
     {
         hamburgerMenu.SetActive(false);
-        baristasPanel.SetActive(false);
+        harvestersPanel.SetActive(false);
         upgradesPanel.SetActive(false);
         investorsPanel.SetActive(true);
         shopPanel.SetActive(false);
@@ -113,7 +113,7 @@ public class UIManager : MonoBehaviour
     public void OpenShopPanel()
     {
         hamburgerMenu.SetActive(false);
-        baristasPanel.SetActive(false);
+        harvestersPanel.SetActive(false);
         upgradesPanel.SetActive(false);
         investorsPanel.SetActive(false);
         shopPanel.SetActive(true);

@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public int prestigeLevel;
 	public long investors;
 	public DateTime lastOnlineTime;
-	public List<int> baristas;
+	public List<int> harvesters;
 
 	// Upgrade Page Data
 	public float brewTimeCostReducer;
@@ -196,7 +196,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		this.prestigeLevel							= data.prestigeLevel;
 		this.investors								= data.investors;
 		this.lastOnlineTime							= DateTime.ParseExact(data.lastOnlineTime, "MM/dd/yyyyTHH:mm:ss", null);
-		this.baristas								= data.baristas;
+		this.harvesters								= data.harvesters;
 
 		// Upgrade Page Data
 		// // Upgrades
@@ -268,7 +268,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		data.prestigeLevel					= this.prestigeLevel;
 		data.investors						= this.investors;
 		data.lastOnlineTime					= DateTime.Now.ToString("MM/dd/yyyyTHH:mm:ss");
-		data.baristas						= this.baristas;
+		data.harvesters						= this.harvesters;
 
 		// Upgrade Page Data
 		// // Upgrades

@@ -24,6 +24,21 @@ public class BeanManager : MonoBehaviour, IDataPersistence
         CreateBeansUI();
     }
 
+    void Update()
+    {
+        for(int i = 0; i < beanUIObjects.Count - 1; i++)
+        {
+            if (beans[i].unlocked)
+            {
+                beanUIObjects[i+1].SetActive(true);
+            } 
+            //else
+            //{
+            //    beanUIObjects[i+1].SetActive(false);
+            //}
+        }
+    }
+
     public void LoadData(GameData data)
     {
         beanDataList = data.beans;
@@ -48,6 +63,10 @@ public class BeanManager : MonoBehaviour, IDataPersistence
             GameObject newBeanUI = Instantiate(beanUIPrefab, scrollContent);
             Bean beanScript = newBeanUI.GetComponent<Bean>();
             InitializeBeanUI(beanData, beanScript);
+            if(beanData.id != 1)
+            {
+                newBeanUI.SetActive(false);
+            }
 
             beanUIObjects.Add(newBeanUI);
             beans.Add(beanScript);
@@ -71,7 +90,7 @@ public class BeanManager : MonoBehaviour, IDataPersistence
         beanScript.unlockPrice = beanData.unlockPrice;
         beanScript.upgradeCoefficient = beanData.upgradeCoefficient;
         beanScript.timeReductionInterval = beanData.timeReductionInterval;
-        if (gameManagerScript.baristas.Contains(beanData.id))
+        if (gameManagerScript.harvesters.Contains(beanData.id))
         {
             beanScript.SetManager(true);
         }

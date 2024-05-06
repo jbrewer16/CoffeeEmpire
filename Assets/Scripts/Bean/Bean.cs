@@ -28,7 +28,10 @@ public class Bean : MonoBehaviour
     public TMP_Text     unlockPriceText;
     public float        initialUpgradeCost;
     public float        timeToGrow;
-    public float        upgradeCoefficient;   
+    public float        upgradeCoefficient;
+    public AudioClip tapSound;
+    public AudioSource audioSource;
+
     private bool        hasManager;
     private int         multiBuyNum = 1;
     private int         upgradeMultiplier = 0;
@@ -232,5 +235,10 @@ public class Bean : MonoBehaviour
         double log = Mathf.Log((float)x, upgradeCoefficient);
         int maxGens = (int)Mathf.Floor((float)log);
         return maxGens;
+    }
+
+    public void PlayTap()
+    {
+        audioSource.PlayOneShot(tapSound);
     }
 }
