@@ -63,6 +63,7 @@ public class OfflineAdRewards : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsS
             Debug.Log($"You have gained ${gameManager.offlineMoneyGainsWithAd}!");
             gameManager.AddMoney(gameManager.offlineMoneyGainsWithAd);
             gameManager.HideOfflinePanel();
+            _showAdButton.onClick.RemoveAllListeners();
         }
     }
 
