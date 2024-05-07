@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public long investors;
 	public DateTime lastOnlineTime;
 	public List<int> harvesters;
+	public bool x2MultUnlocked;
+	public bool x12MultUnlocked;
 
 	// Upgrade Page Data
 	public float brewTimeCostReducer;
@@ -102,9 +104,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public float customerTimerReduceAmount;
 	public float serveSpeedUpgPrice;
 
-
 	private bool gainsNotCalculated = false;
-
 
 	private void Awake()
 	{
@@ -127,6 +127,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		prestigeSystem = prestigeSystemObj.GetComponent<PrestigeSystem>();
 
 		offlineMaxHours = 2;
+		x2MultUnlocked = false;
+		x12MultUnlocked = false;
 
 		// Initialize unlocked beans array (assuming there are 10 beans in total)
 		unlockedBeans = new bool[10];
@@ -197,6 +199,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		this.investors								= data.investors;
 		this.lastOnlineTime							= DateTime.ParseExact(data.lastOnlineTime, "MM/dd/yyyyTHH:mm:ss", null);
 		this.harvesters								= data.harvesters;
+		this.x2MultUnlocked							= data.x2MultUnlocked;
+		this.x12MultUnlocked						= data.x12MultUnlocked;
 
 		// Upgrade Page Data
 		// // Upgrades
@@ -269,6 +273,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		data.investors						= this.investors;
 		data.lastOnlineTime					= DateTime.Now.ToString("MM/dd/yyyyTHH:mm:ss");
 		data.harvesters						= this.harvesters;
+		data.x2MultUnlocked					= this.x2MultUnlocked;
+		data.x12MultUnlocked				= this.x12MultUnlocked;
 
 		// Upgrade Page Data
 		// // Upgrades
@@ -325,7 +331,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 	}
 
-	public void CalculateOfflineGains()
+	public void CalculateOfflineGains(bool isWarpCalculation = false)
 	{
 		DateTime currentTime = DateTime.Now;
 		offlineDuration = currentTime - lastOnlineTime;
@@ -333,7 +339,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		if(offlineDuration.TotalSeconds < 0)
         {
 			Debug.Log("Woah there, something seems strange, did you invent a time machine? Wouldn't travel back anymore or your data may be deleted...");
-        } else if(offlineDuration.TotalMinutes > 5)
+        } else if(offlineDuration.TotalMinutes > 5 || isWarpCalculation)
         {
 			double totalBeansPerMinute = 0;
 
@@ -353,7 +359,13 @@ public class GameManager : MonoBehaviour, IDataPersistence
 			int offlineMaxMinutes = (int)offlineMaxHours * 60;
 			int totalMinutes = (int)Math.Floor(offlineDuration.TotalMinutes);
 
-			if (totalMinutes > offlineMaxMinutes)
+			if (isWarpCalculation)
+            {
+				int totalMinutesWarp = (24 * 60);
+				double offlineBeanGains = totalBeansPerMinute * totalMinutesWarp;
+				double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
+				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * 0.25);
+			} else if (totalMinutes > offlineMaxMinutes)
             {
 				// Gains without ad
 				int totalMinutesWithoutAd = offlineMaxMinutes;
@@ -386,7 +398,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 				offlineWatchAdBtn.SetActive(false);
 			}
 
-			offlineEarningsPanel.SetActive(true);
+			// Set it to the inverse of isWarpCalculation so that it doesn't unnecessarily open the offline panel
+			offlineEarningsPanel.SetActive(!isWarpCalculation);
 
 
    //         Debug.Log("DateTime.Now: " + currentTime);
@@ -456,6 +469,11 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		// Update the gems UI display
 		//UpdateGemsText();
 	}
+
+	public void SpendGems(int amount)
+    {
+		gems -= amount;
+    }
 
 	public void PrestigeReset()
 	{
@@ -542,6 +560,17 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		//UpdateMoneyText();
 		//UpdateGemsText();
 	}
+
+	public void ActivateX2Mult()
+    {
+		x2MultUnlocked = true;
+    }
+
+	public void ActivateX12Mult()
+	{
+		x12MultUnlocked = true;
+	}
+
 
 
 	public void AddInvUpgPriceReducer(float c = 0.05f)

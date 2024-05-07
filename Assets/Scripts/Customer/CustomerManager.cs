@@ -125,15 +125,31 @@ public class CustomerManager : MonoBehaviour
     private void sellCoffee()
     {
 
-        if(gameManager.coffee >= custCapacity)
+        int mult = 1;
+        if (gameManager.x2MultUnlocked && gameManager.x12MultUnlocked)
+        {
+            mult = 24;
+        }
+        else if (gameManager.x12MultUnlocked)
+        {
+            mult = 12;
+        }
+        else if (gameManager.x2MultUnlocked)
+        {
+            mult = 2;
+        }
+
+        if (gameManager.coffee >= custCapacity)
         {
             //gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * custCapacity;
-            gameManager.AddMoney(GetSellPrice() * custCapacity);
+            double profit = (GetSellPrice() * custCapacity) * mult;
+            gameManager.AddMoney(profit);
             gameManager.coffee -= custCapacity;
         } else if(gameManager.coffee > 0)
         {
             //gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * gameManager.coffee;
-            gameManager.AddMoney(GetSellPrice() * gameManager.coffee);
+            double profit = (GetSellPrice() * gameManager.coffee) * mult;
+            gameManager.AddMoney(profit);
             gameManager.coffee -= gameManager.coffee;
         }
 

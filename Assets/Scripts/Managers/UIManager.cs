@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour
     public GameObject debugPanel;
     //public GameObject confirmationPanel;
 
+    public ShopScript shopScript;
+
     private CanvasGroup beansPageCG;
     private CanvasGroup coffeePageCG;
     private CanvasGroup customerPageCG;
@@ -112,6 +114,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenShopPanel()
     {
+        shopScript.CalculateWarpRewards();
         hamburgerMenu.SetActive(false);
         harvestersPanel.SetActive(false);
         upgradesPanel.SetActive(false);

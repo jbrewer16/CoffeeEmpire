@@ -21,6 +21,8 @@ public class GameData
 	public string lastOnlineTime;
 	public List<BeanData> beans;
 	public List<int> harvesters;
+	public bool x2MultUnlocked;
+	public bool x12MultUnlocked;
 
 	// Upgrade Page Data
 	// // Upgrades
@@ -128,6 +130,8 @@ public class GameData
 		this.lastOnlineTime = DateTime.Now.ToString("MM/dd/yyyyTHH:mm:ss");
 		this.beans = new List<BeanData>();
 		this.harvesters = new List<int>();
+		this.x2MultUnlocked = false;
+		this.x12MultUnlocked = false;
 
 		// Upgrade Page Data
 		// // Upgrades

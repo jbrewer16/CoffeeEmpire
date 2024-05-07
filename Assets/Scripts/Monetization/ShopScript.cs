@@ -21,6 +21,19 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
     public ConsumableItem gems_1500;
 
     public TMP_Text debugText;
+    public TMP_Text warpTxt1Day;
+    public TMP_Text warpTxt7Day;
+    public TMP_Text warpTxt14Day;
+
+    public int warpPrice1Day;
+    public int warpPrice7Day;
+    public int warpPrice14Day;
+    public int x2MultPrice;
+    public int x12MultPrice;
+
+    private double warpReward1Day;
+    private double warpReward7Day;
+    private double warpReward14Day;
 
     IStoreController m_StoreController;
 
@@ -34,6 +47,24 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
         addDebugLine("Start! 3");
         SetupBuilder();
         addDebugLine("Start! 4");
+        CalculateWarpRewards();
+    }
+
+    void Update()
+    {
+
+    }
+
+    public void CalculateWarpRewards()
+    {
+        gameManager.CalculateOfflineGains(true);
+        double offlineGains = gameManager.offlineMoneyGains;
+        warpReward1Day = offlineGains;
+        warpReward7Day = offlineGains * 7;
+        warpReward14Day = offlineGains * 14;
+        warpTxt1Day.text = $"Get 1 day worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward1Day, true)})";
+        warpTxt7Day.text = $"Get 7 day worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward7Day, true)})";
+        warpTxt14Day.text = $"Get 14 day worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward14Day, true)})";
     }
 
     public void SetupBuilder()
@@ -151,6 +182,49 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
     public void Buy_1500_Gems()
     {
         m_StoreController.InitiatePurchase(gems_1500.id);
+    }
+
+    public void Buy1DayWarp()
+    {
+        if(gameManager.gems >= warpPrice1Day)
+        {
+            gameManager.AddMoney(warpReward1Day);
+            gameManager.SpendGems(warpPrice1Day);
+        }
+    }
+    public void Buy7DayWarp()
+    {
+        if (gameManager.gems >= warpPrice7Day)
+        {
+            gameManager.AddMoney(warpReward7Day);
+            gameManager.SpendGems(warpPrice7Day);
+        }
+    }
+    public void Buy14DayWarp()
+    {
+        if (gameManager.gems >= warpPrice14Day)
+        {
+            gameManager.AddMoney(warpReward14Day);
+            gameManager.SpendGems(warpPrice14Day);
+        }
+    }
+
+    public void BuyX2Multiplier()
+    {
+        if(gameManager.gems >= x2MultPrice)
+        {
+            gameManager.SpendGems(x2MultPrice);
+            gameManager.ActivateX2Mult();
+        }
+    }
+
+    public void BuyX12Multiplier()
+    {
+        if (gameManager.gems >= x12MultPrice)
+        {
+            gameManager.SpendGems(x12MultPrice);
+            gameManager.ActivateX12Mult();
+        }
     }
 
     // TODO - Remove when IAP is fully developed
