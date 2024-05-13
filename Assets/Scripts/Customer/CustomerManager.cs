@@ -40,7 +40,7 @@ public class CustomerManager : MonoBehaviour
     {
         sellPrice = 5;
         originalServeSpeed = 10;
-        serveSpeed = 10;
+        //serveSpeed = 10;
         //serveSpeedUpgPrice = 1000;
         //custCapacityUpgPrice = 50;
         //custCapacity = 1;
@@ -223,7 +223,7 @@ public class CustomerManager : MonoBehaviour
 
     private float CalculateCustCapacity()
     {
-        float percentageIncrease = 0.1f; // 3% increase
+        float percentageIncrease = 0.1f;
         int newCapacity = custCapacity + (int)Math.Ceiling(custCapacity * percentageIncrease);
         int increment = newCapacity - custCapacity;
         custCapacity += increment < 1 ? 1 : increment;
@@ -232,7 +232,7 @@ public class CustomerManager : MonoBehaviour
 
     private float CalculateCapacityUpgPrice()
     {
-        float percentageIncrease = 0.1f;
+        float percentageIncrease = 0.15f;
         float newPrice = custCapacityUpgPrice + (custCapacityUpgPrice * percentageIncrease);
         custCapacityUpgPrice = newPrice;
         return custCapacityUpgPrice;

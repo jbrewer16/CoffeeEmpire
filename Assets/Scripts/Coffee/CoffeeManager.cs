@@ -19,9 +19,9 @@ public class CoffeeManager : MonoBehaviour
     public float originalBrewSpeed;
     public float brewSpeed;
     public float brewSpeedUpgPrice;
-    public float brewCapacityUpgPrice;
+    public double brewCapacityUpgPrice;
     public float timerReduceAmount;
-    public int brewCapacity;
+    public double brewCapacity;
     public int brewCapacityUpgrades;
     public int sellPrice;
 
@@ -40,7 +40,7 @@ public class CoffeeManager : MonoBehaviour
     void Start()
     {
         originalBrewSpeed = 10;
-        brewSpeed = 10;
+        //brewSpeed = 10;
         //brewSpeedUpgPrice = 1000;
         //brewCapacityUpgPrice = 50;
         //CalculateBrewCapacity();
@@ -50,7 +50,7 @@ public class CoffeeManager : MonoBehaviour
         gameManager = gameManagerObj.GetComponent<GameManager>();
         timer = brewSpeed;
         timerTxt.text = timer + "s";
-        capacityTxt.text = brewCapacity + " Cup";
+        capacityTxt.text = GlobalFunctions.FormatNumber(brewCapacity, false) + " Cup";
         brewSpeedPriceTxt.text = GlobalFunctions.FormatNumber(brewSpeedUpgPrice, true);//"$" + brewSpeedUpgPrice;
         brewCapacityPriceTxt.text = GlobalFunctions.FormatNumber(brewCapacityUpgPrice, true);//"$" + brewCapacityUpgPrice;
         brewTimer.maxValue = timer;
@@ -94,7 +94,7 @@ public class CoffeeManager : MonoBehaviour
     //}
     public void UpdateText()
     {
-        timerTxt.text = "";// timer.ToString("0.00") + "s";
+        timerTxt.text = ""; //timer.ToString("0.00") + "s";
         capacityTxt.text = GlobalFunctions.FormatNumber(brewCapacity) + (brewCapacity > 1 ? " Cups" : " Cup");
         brewSpeedPriceTxt.text = GlobalFunctions.FormatNumber(brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer), true);//"$" + (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer));
         brewCapacityPriceTxt.text = GlobalFunctions.FormatNumber(brewCapacityUpgPrice, true);//"$" + brewCapacityUpgPrice;
@@ -207,18 +207,18 @@ public class CoffeeManager : MonoBehaviour
     //    return brewCapacity;
     //}
 
-    private float CalculateBrewCapacity()
+    private double CalculateBrewCapacity()
     {
         float percentageIncrease = 0.1f;
-        int increment = (int)Math.Ceiling(brewCapacity * percentageIncrease);
+        double increment = Math.Ceiling(brewCapacity * percentageIncrease);
         brewCapacity += Math.Max(1, increment);
         return brewCapacity;
     }
 
-    private float CalculateCapacityUpgPrice()
+    private double CalculateCapacityUpgPrice()
     {
-        float percentageIncrease = 0.1f;
-        float newPrice = brewCapacityUpgPrice + (brewCapacityUpgPrice * percentageIncrease);
+        float percentageIncrease = 0.15f;
+        double newPrice = brewCapacityUpgPrice + (brewCapacityUpgPrice * percentageIncrease);
         brewCapacityUpgPrice = newPrice;
         return brewCapacityUpgPrice;
     }
@@ -231,3 +231,4 @@ public class CoffeeManager : MonoBehaviour
     }
 
 }
+    

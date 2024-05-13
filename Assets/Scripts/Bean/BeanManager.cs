@@ -121,7 +121,7 @@ public class BeanData
     public int id;
     public string beanName;
     public int baseGrowCount;
-    public int upgradeCost;
+    public double upgradeCost;
     public int currentUpgrade;
     public int timeReductionInterval;
     public float timeToGrow;
@@ -129,7 +129,7 @@ public class BeanData
     public double unlockPrice;
     public bool unlocked;
 
-    public BeanData(int i, string bName, int bGrowCount, int upgC, float tToGrow, double unlPrice, float upgCoefficient)
+    public BeanData(int i, string bName, int bGrowCount, double upgC, float tToGrow, double unlPrice, float upgCoefficient)
     {
         id = i;
         beanName = bName;

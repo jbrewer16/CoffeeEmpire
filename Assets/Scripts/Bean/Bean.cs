@@ -26,7 +26,7 @@ public class Bean : MonoBehaviour
     public TMP_Text     upgradeCostText;
     public TMP_Text     upgradeCounterText;
     public TMP_Text     unlockPriceText;
-    public float        initialUpgradeCost;
+    public double        initialUpgradeCost;
     public float        timeToGrow;
     public float        upgradeCoefficient;
     public AudioClip tapSound;
@@ -85,10 +85,6 @@ public class Bean : MonoBehaviour
                 break;
             case 3: // "Max"
                 multiBuyNum = CalculateMaxGenerators();
-                if(beanName == "Arabica")
-                {
-                    Debug.Log(multiBuyNum);
-                }
                 break;
         }
 

@@ -65,9 +65,10 @@ public class GameData
 	//public int inv_coffeeSellPriceIncCount;
 
 	// Coffee Brew Page Data
-	public int brewCapacity;
+	public double brewCapacity;
 	public int brewCapacityUpgrades;
-	public float brewCapacityUpgPrice;
+	public double brewCapacityUpgPrice;
+	public float brewSpeed;
 	public float brewSpeedUpgPrice;
 	public float coffeeTimerReduceAmount;
 
@@ -76,6 +77,7 @@ public class GameData
 	public int custCapacityUpgrades;
 	public float custCapacityUpgPrice;
 	public float customerTimerReduceAmount;
+	public float serveSpeed;
 	public float serveSpeedUpgPrice;
 
 
@@ -90,20 +92,20 @@ public class GameData
 	void fillBeans()
 	{
 		beans.Add(new BeanData(1, "Arabica",		1,		4,			1,		0,			1.07f));
-		beans.Add(new BeanData(2, "Espresso",		16,		20,			3,		250,		1.15f));
-		beans.Add(new BeanData(3, "Mocha",			32,		40,			5,		1500,		1.14f));
-		beans.Add(new BeanData(4, "Chocolate",		64,		75,			10,		20000,		1.13f));
-		beans.Add(new BeanData(5, "Irish Cream",	128,	200,		25,		150000,		1.12f));
-		beans.Add(new BeanData(6, "Cinnamon",		256,	500,		45,		5e5,		1.11f));
-		beans.Add(new BeanData(7, "Maple",			512,	1000,		90,		2.5e6,		1.10f));
-		beans.Add(new BeanData(8, "Pumpkin Spice",	1024,	2500,		120,	5e8,		1.09f));
-		beans.Add(new BeanData(9, "Lava",			2048,	5000,		180,	1.5e10,		1.08f));
-		beans.Add(new BeanData(10,"Radioactive",	4096,	15000,		300,	5e13,		1.07f));
-		beans.Add(new BeanData(11,"Magical",		8192,	30000,		420,	7e15,		1.06f));
-		beans.Add(new BeanData(12,"Quantum",		16384,	75000,		600,	1.5e18,		1.05f));
-		beans.Add(new BeanData(13,"Galactic",		32768,	250000,		900,	3e24,		1.04f));
-		beans.Add(new BeanData(14,"Cosmic",			65536,	500000,		1500,	1e30,		1.03f));
-		beans.Add(new BeanData(15,"Time Warp",		131072, 1000000,	1800,	2e36,		1.02f));
+		beans.Add(new BeanData(2, "Espresso",		16,		100,		3,		250,		1.15f));
+		beans.Add(new BeanData(3, "Mocha",			32,		450,		5,		1500,		1.14f));
+		beans.Add(new BeanData(4, "Chocolate",		64,		7500,		10,		20000,		1.13f));
+		beans.Add(new BeanData(5, "Irish Cream",	128,	20000,		25,		150000,		1.12f));
+		beans.Add(new BeanData(6, "Cinnamon",		256,	5.5e5,		45,		5e5,		1.11f));
+		beans.Add(new BeanData(7, "Maple",			512,	1e6,		90,		2.5e6,		1.10f));
+		beans.Add(new BeanData(8, "Pumpkin Spice",	1024,	2.5e7,		120,	5e8,		1.09f));
+		beans.Add(new BeanData(9, "Lava",			2048,	5e8,		180,	1.5e10,		1.08f));
+		beans.Add(new BeanData(10,"Radioactive",	4096,	1.5e9,		300,	5e13,		1.07f));
+		beans.Add(new BeanData(11,"Magical",		8192,	3e11,		420,	7e15,		1.06f));
+		beans.Add(new BeanData(12,"Quantum",		16384,	7.5e15,		600,	1.5e18,		1.05f));
+		beans.Add(new BeanData(13,"Galactic",		32768,	2.5e19,		900,	3e24,		1.04f));
+		beans.Add(new BeanData(14,"Cosmic",			65536,	5e24,		1500,	1e30,		1.03f));
+		beans.Add(new BeanData(15,"Time Warp",		131072, 1e31,		1800,	2e36,		1.02f));
 	}
 
 	/// <summary>
@@ -177,6 +179,7 @@ public class GameData
 		this.brewCapacity = 1;
 		this.brewCapacityUpgrades = 1;
 		this.brewCapacityUpgPrice = 50;
+		this.brewSpeed = 10;
 		this.brewSpeedUpgPrice = 1000;
 		this.coffeeTimerReduceAmount = 0.25f;
 
@@ -185,6 +188,7 @@ public class GameData
 		this.custCapacityUpgrades = 1;
 		this.custCapacityUpgPrice = 50;
 		this.customerTimerReduceAmount = 0.25f;
+		this.serveSpeed = 10;
 		this.serveSpeedUpgPrice = 1000;
 
 		fillBeans();

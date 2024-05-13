@@ -91,9 +91,9 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	//public int inv_coffeeSellPriceIncCount;
 
 	// Coffee Brew Page Data
-	public int brewCapacity;
+	public double brewCapacity;
 	public int brewCapacityUpgrades;
-	public float brewCapacityUpgPrice;
+	public double brewCapacityUpgPrice;
 	public float brewSpeedUpgPrice;
 	public float coffeeTimerReduceAmount;
 
@@ -244,6 +244,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		coffeeManager.brewCapacity					= data.brewCapacity;
 		coffeeManager.brewCapacityUpgPrice			= data.brewCapacityUpgPrice;
 		coffeeManager.brewCapacityUpgrades			= data.brewCapacityUpgrades;
+		coffeeManager.brewSpeed						= data.brewSpeed;
 		coffeeManager.brewSpeedUpgPrice				= data.brewSpeedUpgPrice;
 		coffeeManager.timerReduceAmount				= data.coffeeTimerReduceAmount;
 
@@ -252,6 +253,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		customerManager.custCapacityUpgrades		= data.custCapacityUpgrades;
 		customerManager.custCapacityUpgPrice		= data.custCapacityUpgPrice;
 		customerManager.timerReduceAmount			= data.customerTimerReduceAmount;
+		customerManager.serveSpeed					= data.serveSpeed;
 		customerManager.serveSpeedUpgPrice			= data.serveSpeedUpgPrice;
 
 		//CalculateOfflineGains();
@@ -319,6 +321,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		data.brewCapacity					= coffeeManager.brewCapacity;
 		data.brewCapacityUpgPrice			= coffeeManager.brewCapacityUpgPrice;
 		data.brewCapacityUpgrades			= coffeeManager.brewCapacityUpgrades;
+		data.brewSpeed						= coffeeManager.brewSpeed;
 		data.brewSpeedUpgPrice				= coffeeManager.brewSpeedUpgPrice;	 
 		data.coffeeTimerReduceAmount		= coffeeManager.timerReduceAmount;
 
@@ -327,6 +330,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		data.custCapacityUpgrades			= customerManager.custCapacityUpgrades;
 		data.custCapacityUpgPrice			= customerManager.custCapacityUpgPrice;
 		data.customerTimerReduceAmount		= customerManager.timerReduceAmount;
+		data.serveSpeed						= customerManager.serveSpeed;
 		data.serveSpeedUpgPrice				= customerManager.serveSpeedUpgPrice;
 
 	}
