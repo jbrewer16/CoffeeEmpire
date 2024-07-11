@@ -10623,7 +10623,7 @@ MonoBehaviour:
   offlineMoneyGains: 0
   offlineMoneyGainsWithAd: 0
   offlineMaxHours: 0
-  gainsReduction: 0.15
+  gainsReduction: 1
   dataLoaded: 0
   beanCnt: 0
   totalEarnedBeans: 0

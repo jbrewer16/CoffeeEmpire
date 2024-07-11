@@ -157,9 +157,9 @@ public class Bean : MonoBehaviour
     // Gives production rate per minute
     public double CalculateProductionRate()
     {
-        Debug.Log("Grow Count: " + growCount);
-        Debug.Log("TimeToGrow: " + timeToGrow);
-        return growCount / timeToGrow * 60; 
+        //Debug.Log("Grow Count: " + growCount);
+        //Debug.Log("TimeToGrow: " + timeToGrow);
+        return (growCount / timeToGrow) * 60;
     }
     public void SetManager(bool hasManager)
     {

@@ -87,10 +87,11 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
     {
         gameManager.CalculateOfflineGains(true);
         double offlineGains = gameManager.offlineMoneyGains;
+        Debug.Log("offlineGains: " + offlineGains);
         //warpReward1Day = offlineGains;
         //warpReward7Day = offlineGains * 7;
         //warpReward14Day = offlineGains * 14;
-        warpReward6Hours = offlineGains * 3;
+        warpReward6Hours = offlineGains / 4;
         warpReward12Hours = warpReward6Hours * 2;
         warpReward24Hours = warpReward12Hours * 2;
         warpTxt1Day.text = $"Get 6 hours worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward6Hours, true)})";

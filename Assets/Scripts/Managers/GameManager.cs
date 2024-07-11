@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public TimeSpan offlineDuration;
 	public float offlineMaxHours;
 
-	public float gainsReduction = 0.15f;
+	public float gainsReduction = 1;//0.15f;
 	private Coroutine doubleIncomeCoroutine;
 
 	public bool dataLoaded;
@@ -121,7 +121,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public float coffeeTimerReduceAmount;
 
 	// Customer Page Data
-	public int custCapacity;
+	public double custCapacity;
 	public int custCapacityUpgrades;
 	public float custCapacityUpgPrice;
 	public float customerTimerReduceAmount;
@@ -387,8 +387,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	{
 		DateTime currentTime = DateTime.Now;
 		offlineDuration = currentTime - lastOnlineTime;
-		// The calculation doesn't accurately count for brew and sell time, just going to reduce it to balance the gains a bit
-		//float gainsReduction = 0.15f;
 
 		if(offlineDuration.TotalSeconds < 0)
         {
@@ -404,50 +402,66 @@ public class GameManager : MonoBehaviour, IDataPersistence
 				if (bean.unlocked)
 				{
 					double beansPerMinute = bean.CalculateProductionRate();
-					//Debug.Log("beansPerMinute: " + beansPerMinute);
 					totalBeansPerMinute += beansPerMinute;
 					unlockedBeans++;
 				}
 			}
 
+			// Calculate total minutes offline
 			int offlineMaxMinutes = (int)offlineMaxHours * 60;
 			int totalMinutes = (int)Math.Floor(offlineDuration.TotalMinutes);
 
 			if (isWarpCalculation)
             {
+				// Get total of the largest warp, the smaller warps will just be a percentage of this calculation
 				int totalMinutesWarp = (24 * 60);
+				// Calculate total beans gained
 				double offlineBeanGains = totalBeansPerMinute * totalMinutesWarp;
-				double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
-				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * gainsReduction);
+				// Calculate cups sold
+				double cupsSold = calculateCupsSold(offlineBeanGains, totalMinutesWarp);
+				// Calculate final gains
+				offlineMoneyGains = Math.Round(cupsSold * customerManager.GetSellPrice());
 			} else if (totalMinutes > offlineMaxMinutes)
             {
+
 				// Gains without ad
 				int totalMinutesWithoutAd = offlineMaxMinutes;
+				// Calculate total beans gained
 				double offlineBeanGains = totalBeansPerMinute * totalMinutesWithoutAd;
-				double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
-				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * gainsReduction);
+				// Calculate cups sold
+				double cupsSold = calculateCupsSold(offlineBeanGains, totalMinutesWithoutAd);
+				// Calculate final gains
+				offlineMoneyGains = Math.Round(cupsSold * customerManager.GetSellPrice());
+
 
 				// Gains with ad
 				int offlineMaxMinutesWithAd = offlineMaxMinutes + 60;
 				int totalMinutesWithAd = Math.Min(totalMinutes, offlineMaxMinutesWithAd);
+				// Calculate total beans gained
 				double offlineBeanGainsWithAd = totalBeansPerMinute * totalMinutesWithAd;
-				double offineCoffeeGainsWithAd = Mathf.Floor((float)(offlineBeanGainsWithAd / coffeeManager.GetBeansPerCup()));
-				offlineMoneyGainsWithAd = Math.Round((offineCoffeeGainsWithAd * customerManager.GetSellPrice()) * gainsReduction);
+				// Calculate cups sold
+				double cupsSoldWithAd = calculateCupsSold(offlineBeanGainsWithAd, totalMinutesWithAd);
+				// Calculate final gains
+				offlineMoneyGainsWithAd = Math.Round(cupsSoldWithAd * customerManager.GetSellPrice());
 
 				// Update display
 				int timeDifference = totalMinutesWithAd - totalMinutesWithoutAd;
 				offlineCounterTxt.text = "You were offline for \n" + offlineDuration.ToString(@"hh\:mm");
-				earningsTxt.text = "You earned \n$" + offlineMoneyGains + " \nWhile you were away!";
+				earningsTxt.text = "You earned \n" + GlobalFunctions.FormatNumber(offlineMoneyGains) + " \nWhile you were away!";
 				watchAdTxt.gameObject.SetActive(true);
 				offlineWatchAdBtn.SetActive(true);
-				watchAdTxt.text = "Watch an ad for extra earnings! + " + timeDifference + "min \n($" + offlineMoneyGainsWithAd + ")";
+				watchAdTxt.text = "Watch an ad for extra earnings! + " + timeDifference + "min \n" + GlobalFunctions.FormatNumber(offlineMoneyGainsWithAd) + ")";
 			} else
             {
+				// Calculate total beans gained
 				double offlineBeanGains = totalBeansPerMinute * totalMinutes;
-				double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
-				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * 0.25);
+				// Calculate cups sold
+				double cupsSold = calculateCupsSold(offlineBeanGains, totalMinutes);
+				// Calculate final gains
+				offlineMoneyGains = Math.Round(cupsSold * customerManager.GetSellPrice());
+				// Set variables
 				offlineCounterTxt.text = "You were offline for \n" + offlineDuration.ToString(@"hh\:mm");
-				earningsTxt.text = "You earned \n$" + offlineMoneyGains + " \nWhile you were away!";
+				earningsTxt.text = "You earned \n" + GlobalFunctions.FormatNumber(offlineMoneyGains) + " \nWhile you were away!";
 				watchAdTxt.gameObject.SetActive(false);
 				offlineWatchAdBtn.SetActive(false);
 			}
@@ -455,19 +469,31 @@ public class GameManager : MonoBehaviour, IDataPersistence
 			// Set it to the inverse of isWarpCalculation so that it doesn't unnecessarily open the offline panel
 			offlineEarningsPanel.SetActive(!isWarpCalculation);
 
-
-   //         Debug.Log("DateTime.Now: " + currentTime);
-   //         Debug.Log("Unlocked Beans: " + unlockedBeans);
-   //         Debug.Log("lastOnlineTime: " + lastOnlineTime);
-   //         Debug.Log("Offline Duration: " + offlineDuration);
-   //         Debug.Log("TotalBeansPerMinute: " + totalBeansPerMinute);
-   //         Debug.Log("TotalMinutes: " + totalMinutes);
-			//Debug.Log("Offline Gains: " + offlineBeanGains);
-   //         Debug.Log("offlineCoffeeGains: " + offlineCoffeeGains);
-   //         Debug.Log("offlineMoneyGains: " + offlineMoneyGains);
-
 		}
 
+	}
+
+	public double calculateCupsSold(double offlineBeanGains, int totalMinutes)
+    {
+		// Calculate brew and sell per minute
+		double brewCapacity = coffeeManager.brewCapacity;
+		float brewSpeed = coffeeManager.brewSpeed;
+		double custCapacity = customerManager.custCapacity;
+		float serveSpeed = customerManager.serveSpeed;
+		double brewPerMinute = (brewCapacity / brewSpeed) * 60;
+		double sellPerMinute = (custCapacity / serveSpeed) * 60;
+
+		// Calculate cups brewed
+		double brewAmount = Math.Ceiling(offlineBeanGains / coffeeManager.GetBeansPerCup());
+		double maxBrewAmount = brewPerMinute * totalMinutes;
+		double cupsBrewed = Math.Min(brewAmount, maxBrewAmount);
+
+		// Calculate cups sold
+		double sellAmount = cupsBrewed;
+		double maxSellAmount = sellPerMinute * totalMinutes;
+		double cupsSold = Math.Min(sellAmount, maxSellAmount);
+
+		return cupsSold;
 	}
 
 	public void OfflineContinueBtn()

@@ -86,7 +86,7 @@ public class GameData
 	public float coffeeTimerReduceAmount;
 
 	// Customer Page Data
-	public int custCapacity;
+	public double custCapacity;
 	public int custCapacityUpgrades;
 	public float custCapacityUpgPrice;
 	public float customerTimerReduceAmount;

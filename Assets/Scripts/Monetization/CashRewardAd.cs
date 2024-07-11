@@ -64,7 +64,7 @@ public class CashRewardAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
     public void showConfirmationPanel()
     {
         gameManager.CalculateOfflineGains(true);
-        double adReward = gameManager.offlineMoneyGains * 0.25;
+        double adReward = gameManager.offlineMoneyGains * 0.05;
         titleTxt.text = "Watch an AD for a cash reward of " + GlobalFunctions.FormatNumber(adReward, true);
         Sprite srcSprite = Sprite.Create(srcImage, new Rect(0, 0, srcImage.width, srcImage.height), new Vector2(0.5f, 0.5f));
         iconImg.sprite = srcSprite;
@@ -102,7 +102,7 @@ public class CashRewardAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
         if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
             gameManager.CalculateOfflineGains(true);
-            double adReward = gameManager.offlineMoneyGains * 0.25;
+            double adReward = gameManager.offlineMoneyGains * 0.05;
             Debug.Log("You earned $" + adReward + " for watching this ad.");
             gameManager.AddMoney(adReward);
             _showAdButton.onClick.RemoveAllListeners();
@@ -137,7 +137,7 @@ public class CashRewardAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
     public IEnumerator StartAdTimer()
     {
 
-        int adMinutes = Random.Range(1, 10);
+        int adMinutes = Random.Range(1, 15);
         Debug.Log("Showing another ad in " + adMinutes + " minutes.");
 
         int timeInSeconds = adMinutes * 60;

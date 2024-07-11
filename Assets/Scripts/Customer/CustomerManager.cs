@@ -20,7 +20,7 @@ public class CustomerManager : MonoBehaviour
     public float serveSpeedUpgPrice;
     public float custCapacityUpgPrice;
     public float timerReduceAmount;
-    public int custCapacity;
+    public double custCapacity;
     public int custCapacityUpgrades;
     public int sellPrice;
 
@@ -271,12 +271,17 @@ public class CustomerManager : MonoBehaviour
         timerReduceAmount = 0.25f;
     }
 
-    private float CalculateCustCapacity()
+    private double CalculateCustCapacity()
     {
+        //float percentageIncrease = 0.1f;
+        //int newCapacity = custCapacity + (int)Math.Ceiling(custCapacity * percentageIncrease);
+        //int increment = newCapacity - custCapacity;
+        //custCapacity += increment < 1 ? 1 : increment;
+        //return custCapacity;
+
         float percentageIncrease = 0.1f;
-        int newCapacity = custCapacity + (int)Math.Ceiling(custCapacity * percentageIncrease);
-        int increment = newCapacity - custCapacity;
-        custCapacity += increment < 1 ? 1 : increment;
+        double increment = Math.Ceiling(custCapacity * percentageIncrease);
+        custCapacity += Math.Max(1, increment);
         return custCapacity;
     }
 
