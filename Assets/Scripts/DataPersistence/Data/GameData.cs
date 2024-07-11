@@ -9,6 +9,7 @@ public class GameData
 {
 
 	// General Player Data
+	public int playersDevVersion;
 	public double beanCnt;
 	public double totalEarnedBeans;
 	public double lifetimeEarnedBeans;
@@ -133,6 +134,7 @@ public class GameData
 	{
 		//Debug.Log("Initializing Data!!!!!");
 		// General Player Data
+		this.playersDevVersion = 0;
 		this.beanCnt = 0;
 		this.coffee = 0;
 		this.lifetimeEarnings = 10;

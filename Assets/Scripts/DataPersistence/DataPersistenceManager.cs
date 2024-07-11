@@ -64,41 +64,102 @@ public class DataPersistenceManager : MonoBehaviour
             Debug.Log("No data was found or restart was clicked, initializing data to defaults");
             NewGame();
             restartGame = false;
-        }
-        // Push the loaded data to all scripts that need it
-        foreach(IDataPersistence dataPersistenceObj in dataPersistenceObjs)
-        {
-            dataPersistenceObj.LoadData(gameData);
-        }
 
-        if(!gameManager.finishedTutorial)
-        {
-            Debug.Log("The tutorial was unfinished, restarting!");
-            NewGame();
+            // Push the loaded data to all scripts that need it
             foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjs)
             {
                 dataPersistenceObj.LoadData(gameData);
             }
-        }
-
-        gameManager.dataLoaded = true;
-        if(!gameManager.finishedTutorial)
-        {
             tutorialManager.showWelcomePanel();
+            gameManager.playersDevVersion = gameManager.currentDevVersion;
+        } else
+        {
+            // Push the loaded data to all scripts that need it
+            foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjs)
+            {
+                dataPersistenceObj.LoadData(gameData);
+            }
+
+            if(gameManager.currentDevVersion > gameManager.playersDevVersion)
+            {
+                Debug.Log("New dev version detected! Deleting data to restart with new features");
+                NewGame();
+
+                // Push the loaded data to all scripts that need it
+                foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjs)
+                {
+                    dataPersistenceObj.LoadData(gameData);
+                }
+                tutorialManager.showWelcomePanel();
+                gameManager.playersDevVersion = gameManager.currentDevVersion;
+            } else
+            {
+                if (!gameManager.finishedTutorial)
+                {
+                    Debug.Log("The tutorial was unfinished, restarting!");
+                    NewGame();
+                    foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjs)
+                    {
+                        dataPersistenceObj.LoadData(gameData);
+                    }
+
+                    tutorialManager.showWelcomePanel();
+                    gameManager.playersDevVersion = gameManager.currentDevVersion;
+                }
+
+                gameManager.dataLoaded = true;
+
+                if (gameManager.remainingDoubleIncomeTime > 0)
+                {
+                    StartCoroutine(gameManager.DoubleIncomeTimer());
+                }
+                if (gameManager.remainingDoubleCustomerTime > 0)
+                {
+                    StartCoroutine(gameManager.DoubleCustCapacityTimer());
+                }
+                if (gameManager.remainingDoubleBrewingTime > 0)
+                {
+                    StartCoroutine(gameManager.DoubleBrewingCapacityTimer());
+                }
+            }
         }
 
-        if (gameManager.remainingDoubleIncomeTime > 0)
-        {
-            StartCoroutine(gameManager.DoubleIncomeTimer());
-        }
-        if (gameManager.remainingDoubleCustomerTime > 0)
-        {
-            StartCoroutine(gameManager.DoubleCustCapacityTimer());
-        }
-        if (gameManager.remainingDoubleBrewingTime > 0)
-        {
-            StartCoroutine(gameManager.DoubleBrewingCapacityTimer());
-        }
+
+
+        // Push the loaded data to all scripts that need it
+        //foreach(IDataPersistence dataPersistenceObj in dataPersistenceObjs)
+        //{
+        //    dataPersistenceObj.LoadData(gameData);
+        //}
+
+        //if(!gameManager.finishedTutorial)
+        //{
+        //    Debug.Log("The tutorial was unfinished, restarting!");
+        //    NewGame();
+        //    foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjs)
+        //    {
+        //        dataPersistenceObj.LoadData(gameData);
+        //    }
+        //}
+
+        //gameManager.dataLoaded = true;
+        //if(!gameManager.finishedTutorial)
+        //{
+        //    tutorialManager.showWelcomePanel();
+        //}
+
+        //if (gameManager.remainingDoubleIncomeTime > 0)
+        //{
+        //    StartCoroutine(gameManager.DoubleIncomeTimer());
+        //}
+        //if (gameManager.remainingDoubleCustomerTime > 0)
+        //{
+        //    StartCoroutine(gameManager.DoubleCustCapacityTimer());
+        //}
+        //if (gameManager.remainingDoubleBrewingTime > 0)
+        //{
+        //    StartCoroutine(gameManager.DoubleBrewingCapacityTimer());
+        //}
 
     }
 

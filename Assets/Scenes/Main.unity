@@ -10601,6 +10601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8051c8ea419111e4b99c326a03fd0ae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentDevVersion: 3
   prestigeSystemObj: {fileID: 539545618}
   offlineWatchAdBtn: {fileID: 366525370}
   prestigeSystem: {fileID: 0}
@@ -10625,6 +10626,7 @@ MonoBehaviour:
   offlineMaxHours: 0
   gainsReduction: 1
   dataLoaded: 0
+  playersDevVersion: 1
   beanCnt: 0
   totalEarnedBeans: 0
   lifetimeEarnedBeans: 0

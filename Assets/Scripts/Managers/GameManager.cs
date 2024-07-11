@@ -8,6 +8,7 @@ using System;
 public class GameManager : MonoBehaviour, IDataPersistence
 {
 	public static GameManager Instance { get; private set; }
+	public int currentDevVersion = 2;
 	public GameObject prestigeSystemObj;
 	public GameObject offlineWatchAdBtn;
 	public PrestigeSystem prestigeSystem;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public bool dataLoaded;
 
 	// General Player Data
+	public int playersDevVersion = 1;
 	public double beanCnt;
 	public double totalEarnedBeans;
 	public double lifetimeEarnedBeans;
@@ -210,6 +212,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public void LoadData(GameData data)
     {
 		// General Player Data
+		this.playersDevVersion						= data.playersDevVersion;
 		this.beanCnt								= data.beanCnt;
 		this.totalEarnedBeans						= data.totalEarnedBeans;
 		this.lifetimeEarnedBeans					= data.lifetimeEarnedBeans;
@@ -299,6 +302,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     {
 
 		// General Player Data
+		data.playersDevVersion				= this.playersDevVersion;
 		data.beanCnt						= this.beanCnt;
 		data.totalEarnedBeans				= this.totalEarnedBeans;
 		data.lifetimeEarnedBeans			= this.lifetimeEarnedBeans;
@@ -447,10 +451,10 @@ public class GameManager : MonoBehaviour, IDataPersistence
 				// Update display
 				int timeDifference = totalMinutesWithAd - totalMinutesWithoutAd;
 				offlineCounterTxt.text = "You were offline for \n" + offlineDuration.ToString(@"hh\:mm");
-				earningsTxt.text = "You earned \n" + GlobalFunctions.FormatNumber(offlineMoneyGains) + " \nWhile you were away!";
+				earningsTxt.text = "You earned \n" + GlobalFunctions.FormatNumber(offlineMoneyGains, true) + " \nWhile you were away!";
 				watchAdTxt.gameObject.SetActive(true);
 				offlineWatchAdBtn.SetActive(true);
-				watchAdTxt.text = "Watch an ad for extra earnings! + " + timeDifference + "min \n" + GlobalFunctions.FormatNumber(offlineMoneyGainsWithAd) + ")";
+				watchAdTxt.text = "Watch an ad for extra earnings! + " + timeDifference + "min \n" + GlobalFunctions.FormatNumber(offlineMoneyGainsWithAd, true) + ")";
 			} else
             {
 				// Calculate total beans gained
@@ -461,7 +465,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 				offlineMoneyGains = Math.Round(cupsSold * customerManager.GetSellPrice());
 				// Set variables
 				offlineCounterTxt.text = "You were offline for \n" + offlineDuration.ToString(@"hh\:mm");
-				earningsTxt.text = "You earned \n" + GlobalFunctions.FormatNumber(offlineMoneyGains) + " \nWhile you were away!";
+				earningsTxt.text = "You earned \n" + GlobalFunctions.FormatNumber(offlineMoneyGains, true) + " \nWhile you were away!";
 				watchAdTxt.gameObject.SetActive(false);
 				offlineWatchAdBtn.SetActive(false);
 			}
