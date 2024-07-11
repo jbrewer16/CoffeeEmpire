@@ -24,6 +24,8 @@ public class CustomerManager : MonoBehaviour
     public int custCapacityUpgrades;
     public int sellPrice;
 
+    public bool maxSellSpeedUnlocked;
+
     private GameManager gameManager;
 
     private float timer;
@@ -63,6 +65,15 @@ public class CustomerManager : MonoBehaviour
         sellTimer.maxValue = serveSpeed;
         //float currentSpeedMultiplier = isSpeedBoosted ? (speedBoostMultiplier + gameManager.inv_speedPerTap) : 1;
 
+        if (serveSpeed <= 0.25f)
+        {
+            maxSellSpeedUnlocked = true;
+        }
+        else
+        {
+            maxSellSpeedUnlocked = false;
+        }
+
         if (gameManager.coffee >= 1)
         {
             timer -= Time.deltaTime * GetCurrentSpeedMultiplier();
@@ -86,9 +97,28 @@ public class CustomerManager : MonoBehaviour
 
     public void UpdateText()
     {
+        double finalCustCapacity = 0;
+        if (gameManager.doubleCustCapacityActive)
+        {
+            finalCustCapacity = custCapacity * 2;
+        }
+        else
+        {
+            finalCustCapacity = custCapacity;
+        }
+
         timerTxt.text = ""; // timer.ToString("0.00") + "s";
-        custCapacityTxt.text = custCapacity + " Cup";
-        serveSpeedPriceTxt.text = GlobalFunctions.FormatNumber(serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer), true);//"$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
+        //custCapacityTxt.text = finalCustCapacity + " Cup";
+        custCapacityTxt.text = GlobalFunctions.FormatNumber(finalCustCapacity) + (finalCustCapacity > 1 ? " Cups" : " Cup");
+        if (maxSellSpeedUnlocked)
+        {
+            serveSpeedPriceTxt.text = "MAX";
+        }
+        else
+        {
+            serveSpeedPriceTxt.text = GlobalFunctions.FormatNumber(serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer), true);
+        }
+        //serveSpeedPriceTxt.text = GlobalFunctions.FormatNumber(serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer), true);//"$" + (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer));
         custCapacityPriceTxt.text = GlobalFunctions.FormatNumber(custCapacityUpgPrice, true);//"$" + custCapacityUpgPrice;
     }
     
@@ -125,6 +155,19 @@ public class CustomerManager : MonoBehaviour
     private void sellCoffee()
     {
 
+        double finalCustCapacity = 0;
+        if (gameManager.doubleCustCapacityActive)
+        {
+            finalCustCapacity = custCapacity * 2;
+        }
+        else
+        {
+            finalCustCapacity = custCapacity;
+        }
+
+        int freeChance = UnityEngine.Random.Range(0, 100);
+        bool freeUpg = freeChance < gameManager.inv_freeSellChance;
+
         int mult = 1;
         if (gameManager.x2MultUnlocked && gameManager.x12MultUnlocked)
         {
@@ -139,18 +182,18 @@ public class CustomerManager : MonoBehaviour
             mult = 2;
         }
 
-        if (gameManager.coffee >= custCapacity)
+        if (gameManager.coffee >= finalCustCapacity)
         {
             //gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * custCapacity;
-            double profit = (GetSellPrice() * custCapacity) * mult;
+            double profit = (GetSellPrice() * finalCustCapacity) * mult;
             gameManager.AddMoney(profit);
-            gameManager.coffee -= custCapacity;
+            if(!freeUpg) gameManager.coffee -= finalCustCapacity;
         } else if(gameManager.coffee > 0)
         {
             //gameManager.money += (sellPrice + gameManager.coffeeSellPriceInc) * gameManager.coffee;
             double profit = (GetSellPrice() * gameManager.coffee) * mult;
             gameManager.AddMoney(profit);
-            gameManager.coffee -= gameManager.coffee;
+            if (!freeUpg) gameManager.coffee -= gameManager.coffee;
         }
 
         //if (gameManager.coffee >= custCapacity)
@@ -174,13 +217,20 @@ public class CustomerManager : MonoBehaviour
 
     public void upgradeServeSpeed()
     {
-        if (gameManager.money >= (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer)))
+         if(serveSpeed - 0.15f <= 0.25)
         {
-            gameManager.SpendMoney((serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer)));
-            serveSpeed -= 0.15f;
-            sellTimer.maxValue = serveSpeed;
-            CalculateSpeedUpgPrice();
-            UpdateText();
+            serveSpeed = 0.25f;
+            maxSellSpeedUnlocked = true;
+        } else
+        {
+            if (gameManager.money >= (serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer)))
+            {
+                gameManager.SpendMoney((serveSpeedUpgPrice - (serveSpeedUpgPrice * gameManager.sellTimeCostReducer)));
+                serveSpeed -= 0.15f;
+                sellTimer.maxValue = serveSpeed;
+                CalculateSpeedUpgPrice();
+                UpdateText();
+            }
         }
     }
 
@@ -239,7 +289,7 @@ public class CustomerManager : MonoBehaviour
     }
     private float CalculateSpeedUpgPrice()
     {
-        float percentageIncrease = 1.1f;
+        float percentageIncrease = 1.5f;
         float newPrice = serveSpeedUpgPrice + (serveSpeedUpgPrice * percentageIncrease);
         serveSpeedUpgPrice = newPrice;
         return serveSpeedUpgPrice;

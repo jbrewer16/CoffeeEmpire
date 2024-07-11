@@ -21,6 +21,7 @@ public class Bean : MonoBehaviour
     public GameObject   unlockPanel;
     public bool         growClicked;
     public bool         unlocked;
+    public TMP_Text     buyCountTxt;
     public TMP_Text     growCountText;
     public TMP_Text     timeToGrowText;
     public TMP_Text     upgradeCostText;
@@ -38,6 +39,9 @@ public class Bean : MonoBehaviour
     private float       timer;
     private const float TimeReductionFactor = 0.5f;
 
+    public Image beanIcon;
+    public string beanIconPath;
+
     private void Start()
     {
         //unlocked = false;
@@ -52,6 +56,8 @@ public class Bean : MonoBehaviour
         beanUpgSlider.value = 1;
         unlockPanel.SetActive(!unlocked);
         growCount = baseGrowCount * upgradeCount;
+        beanIconPath = "BeanIcons/" + beanName;
+        setBeanImage(beanIconPath);
         UpdateText();
         //currentUpgrade = gameManager.inv_upgStartCnt + 1;
     }
@@ -94,6 +100,7 @@ public class Bean : MonoBehaviour
 
     private void UpdateText()
     {
+        buyCountTxt.text = "x" + multiBuyNum;
         growCountText.text = "" + GlobalFunctions.FormatNumber(
             growCount * (upgradeMultiplier > 0 ? upgradeMultiplier : 1) * 
             (gameManager.growthRateMultiplier + (gameManager.investors * gameManager.investorEffectiveness)));
@@ -101,6 +108,12 @@ public class Bean : MonoBehaviour
         timeToGrowText.text = timer.ToString("0") + "s";
         upgradeCounterText.text = upgradeCount + "/" + timeReductionInterval;
         beanUpgSlider.value = upgradeCount;
+    }
+
+    public void setBeanImage(string path)
+    {
+        Sprite icon = Resources.Load<Sprite>(path);
+        beanIcon.sprite = icon;
     }
 
     public void UpgradeBean()
@@ -211,11 +224,13 @@ public class Bean : MonoBehaviour
         if(multiBuyNum == 1)
         {
             upgCost = initialUpgradeCost * Mathf.Pow(upgradeCoefficient, (upgradeCount - 1));
+            upgCost -= (upgCost * gameManager.growthCostReducer);
         } else
         {
             double rk = Mathf.Pow(upgradeCoefficient, (upgradeCount - 1));
             double rn = Mathf.Pow(upgradeCoefficient, multiBuyNum);
             upgCost = initialUpgradeCost * ((rk * (rn - 1)) / (upgradeCoefficient - 1));
+            upgCost -= (upgCost * gameManager.growthCostReducer);
             //upgCost = initialUpgradeCost * ((Mathf.Pow;
         }
 
@@ -233,8 +248,8 @@ public class Bean : MonoBehaviour
         return maxGens;
     }
 
-    public void PlayTap()
-    {
-        audioSource.PlayOneShot(tapSound);
-    }
+    //public void PlayTap()
+    //{
+    //    audioSource.PlayOneShot(tapSound);
+    //}
 }

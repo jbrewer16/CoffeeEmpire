@@ -10,6 +10,8 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
 {
 
     public GameObject gameManagerObj;
+    public GameObject x2MultBtn;
+    public GameObject x12MultBtn;
     GameManager gameManager;
 
     public ConsumableItem cItem;
@@ -25,15 +27,22 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
     public TMP_Text warpTxt7Day;
     public TMP_Text warpTxt14Day;
 
-    public int warpPrice1Day;
-    public int warpPrice7Day;
-    public int warpPrice14Day;
+    //public int warpPrice1Day;
+    //public int warpPrice7Day;
+    //public int warpPrice14Day;
+    public int warpPrice6Hours;
+    public int warpPrice12Hours;
+    public int warpPrice24Hours;
     public int x2MultPrice;
     public int x12MultPrice;
 
     private double warpReward1Day;
     private double warpReward7Day;
     private double warpReward14Day;
+
+    private double warpReward6Hours;
+    private double warpReward12Hours;
+    private double warpReward24Hours;
 
     IStoreController m_StoreController;
 
@@ -48,23 +57,45 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
         SetupBuilder();
         addDebugLine("Start! 4");
         CalculateWarpRewards();
+
+        
+
     }
 
     void Update()
     {
+        if (gameManager.x2MultUnlocked)
+        {
+            x2MultBtn.SetActive(false);
+        }
+        else
+        {
+            x2MultBtn.SetActive(true);
+        }
 
+        if (gameManager.x12MultUnlocked)
+        {
+            x12MultBtn.SetActive(false);
+        }
+        else
+        {
+            x12MultBtn.SetActive(true);
+        }
     }
 
     public void CalculateWarpRewards()
     {
         gameManager.CalculateOfflineGains(true);
         double offlineGains = gameManager.offlineMoneyGains;
-        warpReward1Day = offlineGains;
-        warpReward7Day = offlineGains * 7;
-        warpReward14Day = offlineGains * 14;
-        warpTxt1Day.text = $"Get 1 day worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward1Day, true)})";
-        warpTxt7Day.text = $"Get 7 day worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward7Day, true)})";
-        warpTxt14Day.text = $"Get 14 day worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward14Day, true)})";
+        //warpReward1Day = offlineGains;
+        //warpReward7Day = offlineGains * 7;
+        //warpReward14Day = offlineGains * 14;
+        warpReward6Hours = offlineGains * 3;
+        warpReward12Hours = warpReward6Hours * 2;
+        warpReward24Hours = warpReward12Hours * 2;
+        warpTxt1Day.text = $"Get 6 hours worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward6Hours, true)})";
+        warpTxt7Day.text = $"Get 12 hours worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward12Hours, true)})";
+        warpTxt14Day.text = $"Get 24 hours worth of profit instantly! \n ({GlobalFunctions.FormatNumber(warpReward24Hours, true)})";
     }
 
     public void SetupBuilder()
@@ -184,28 +215,28 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
         m_StoreController.InitiatePurchase(gems_1500.id);
     }
 
-    public void Buy1DayWarp()
+    public void Buy6HourWarp()
     {
-        if(gameManager.gems >= warpPrice1Day)
+        if(gameManager.gems >= warpPrice6Hours)
         {
-            gameManager.AddMoney(warpReward1Day);
-            gameManager.SpendGems(warpPrice1Day);
+            gameManager.AddMoney(warpReward6Hours);
+            gameManager.SpendGems(warpPrice6Hours);
         }
     }
-    public void Buy7DayWarp()
+    public void Buy12HourWarp()
     {
-        if (gameManager.gems >= warpPrice7Day)
+        if (gameManager.gems >= warpPrice12Hours)
         {
-            gameManager.AddMoney(warpReward7Day);
-            gameManager.SpendGems(warpPrice7Day);
+            gameManager.AddMoney(warpReward12Hours);
+            gameManager.SpendGems(warpPrice12Hours);
         }
     }
-    public void Buy14DayWarp()
+    public void Buy24HourWarp()
     {
-        if (gameManager.gems >= warpPrice14Day)
+        if (gameManager.gems >= warpPrice24Hours)
         {
-            gameManager.AddMoney(warpReward14Day);
-            gameManager.SpendGems(warpPrice14Day);
+            gameManager.AddMoney(warpReward24Hours);
+            gameManager.SpendGems(warpPrice24Hours);
         }
     }
 
@@ -215,6 +246,7 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
         {
             gameManager.SpendGems(x2MultPrice);
             gameManager.ActivateX2Mult();
+            x2MultBtn.SetActive(false);
         }
     }
 
@@ -224,6 +256,7 @@ public class ShopScript : MonoBehaviour, IDetailedStoreListener
         {
             gameManager.SpendGems(x12MultPrice);
             gameManager.ActivateX12Mult();
+            x12MultBtn.SetActive(false);
         }
     }
 

@@ -25,6 +25,8 @@ public class CoffeeManager : MonoBehaviour
     public int brewCapacityUpgrades;
     public int sellPrice;
 
+    public bool maxBrewSpeedUnlocked;
+
     private GameManager gameManager;
 
     private float timer;
@@ -67,6 +69,15 @@ public class CoffeeManager : MonoBehaviour
         //    Debug.Log(currentSpeedMultiplier);
         //}
 
+        if (brewSpeed <= 0.25f)
+        {
+            maxBrewSpeedUnlocked = true;
+        }
+        else
+        {
+            maxBrewSpeedUnlocked = false;
+        }
+
         if (gameManager.beanCnt >= (beanPerCup - gameManager.beanDensity))
         {
             timer -= Time.deltaTime * GetCurrentSpeedMultiplier();
@@ -94,9 +105,25 @@ public class CoffeeManager : MonoBehaviour
     //}
     public void UpdateText()
     {
+        double finalBrewCapacity = 0;
+        if (gameManager.doubleBrewCapacityActive)
+        {
+            finalBrewCapacity = brewCapacity * 2;
+        }
+        else
+        {
+            finalBrewCapacity = brewCapacity;
+        }
+
         timerTxt.text = ""; //timer.ToString("0.00") + "s";
-        capacityTxt.text = GlobalFunctions.FormatNumber(brewCapacity) + (brewCapacity > 1 ? " Cups" : " Cup");
-        brewSpeedPriceTxt.text = GlobalFunctions.FormatNumber(brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer), true);//"$" + (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer));
+        capacityTxt.text = GlobalFunctions.FormatNumber(finalBrewCapacity) + (finalBrewCapacity > 1 ? " Cups" : " Cup");
+        if(maxBrewSpeedUnlocked)
+        {
+            brewSpeedPriceTxt.text = "MAX";
+        } else
+        {
+            brewSpeedPriceTxt.text = GlobalFunctions.FormatNumber(brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer), true);
+        }
         brewCapacityPriceTxt.text = GlobalFunctions.FormatNumber(brewCapacityUpgPrice, true);//"$" + brewCapacityUpgPrice;
     }
 
@@ -132,12 +159,23 @@ public class CoffeeManager : MonoBehaviour
 
     private void brewCoffee()
     {
+
+        double finalBrewCapacity = 0;
+
+        if(gameManager.doubleBrewCapacityActive)
+        {
+            finalBrewCapacity = brewCapacity * 2;
+        } else
+        {
+            finalBrewCapacity = brewCapacity;
+        }
+
         int freeChance = UnityEngine.Random.Range(0, 100);
         bool freeUpg = freeChance < gameManager.inv_freeBrewChance;
-        if (gameManager.beanCnt >= ((beanPerCup - gameManager.beanDensity) * brewCapacity))
+        if (gameManager.beanCnt >= ((beanPerCup - gameManager.beanDensity) * finalBrewCapacity))
         {
-            if(!freeUpg) gameManager.beanCnt -= ((beanPerCup - gameManager.beanDensity) * brewCapacity);
-            gameManager.coffee += brewCapacity;
+            if(!freeUpg) gameManager.beanCnt -= ((beanPerCup - gameManager.beanDensity) * finalBrewCapacity);
+            gameManager.coffee += finalBrewCapacity;
         } else
         {
             double cupsToBrew = gameManager.beanCnt / (beanPerCup - gameManager.beanDensity);
@@ -152,13 +190,20 @@ public class CoffeeManager : MonoBehaviour
     }
     public void upgradeBrewTime()
     {
-        if(gameManager.money >= (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer)))
+        if(brewSpeed - 0.15f <= 0.25)
         {
-            gameManager.SpendMoney((brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer)));
-            brewSpeed -= 0.15f;
-            brewTimer.maxValue = brewSpeed;
-            CalculateSpeedUpgPrice();
-            UpdateText();
+            brewSpeed = 0.25f;
+            maxBrewSpeedUnlocked = true;
+        } else
+        {
+            if (gameManager.money >= (brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer)))
+            {
+                gameManager.SpendMoney((brewSpeedUpgPrice - (brewSpeedUpgPrice * gameManager.brewTimeCostReducer)));
+                brewSpeed -= 0.15f;
+                brewTimer.maxValue = brewSpeed;
+                CalculateSpeedUpgPrice();
+                UpdateText();
+            }
         }
     }
 
@@ -224,7 +269,7 @@ public class CoffeeManager : MonoBehaviour
     }
     private float CalculateSpeedUpgPrice()
     {
-        float percentageIncrease = 1.1f;
+        float percentageIncrease = 1.5f;
         float newPrice = brewSpeedUpgPrice + (brewSpeedUpgPrice * percentageIncrease);
         brewSpeedUpgPrice = newPrice;
         return brewSpeedUpgPrice;

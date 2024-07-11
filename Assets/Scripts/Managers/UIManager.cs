@@ -5,6 +5,8 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
 
+    public GameObject adConfirmationPanel;
+    public GameObject bugReportPanel;
     public GameObject header;
     public GameObject footer;
     public GameObject beansPage;
@@ -16,6 +18,10 @@ public class UIManager : MonoBehaviour
     public GameObject investorsPanel;
     public GameObject shopPanel;
     public GameObject debugPanel;
+    public GameObject doubleIncomeBtn;
+    public GameObject doubleBrewCapBtn;
+    public GameObject doubleCustCapBtn;
+    public GameObject statisticsPage;
     //public GameObject confirmationPanel;
 
     public ShopScript shopScript;
@@ -25,9 +31,16 @@ public class UIManager : MonoBehaviour
     private CanvasGroup customerPageCG;
     public int currPage;
 
+    public GameObject gameManagerObj;
+    GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = gameManagerObj.GetComponent<GameManager>();
+
+        adConfirmationPanel.SetActive(false);
+        //bugReportPanel.SetActive(false);
         header.SetActive(true);
         footer.SetActive(true);
         beansPage.SetActive(true);
@@ -39,6 +52,7 @@ public class UIManager : MonoBehaviour
         investorsPanel.SetActive(false);
         shopPanel.SetActive(false);
         debugPanel.SetActive(false);
+        statisticsPage.SetActive(false);
         //confirmationPanel.SetActive(false);
 
         beansPageCG = beansPage.GetComponent<CanvasGroup>();
@@ -53,8 +67,57 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(gameManager.doubleIncomeAdsWatched < 4)
+        {
+            doubleIncomeBtn.SetActive(true);
+        } else
+        {
+            doubleIncomeBtn.SetActive(false);
+        }
+
+        if(gameManager.doubleBrewCapacityActive)
+        {
+            doubleBrewCapBtn.SetActive(false);
+        } else
+        {
+            doubleBrewCapBtn.SetActive(true);
+        }
+
+        if (gameManager.doubleCustCapacityActive)
+        {
+            doubleCustCapBtn.SetActive(false);
+        }
+        else
+        {
+            doubleCustCapBtn.SetActive(true);
+        }
+
     }
+
+    public void openStatisticsPage()
+    {
+        hamburgerMenu.SetActive(false);
+        statisticsPage.SetActive(true);
+    }
+
+    public void closeStatisticsPage()
+    {
+        hamburgerMenu.SetActive(true);
+        statisticsPage.SetActive(false);
+    }
+
+    public void openBugReportPanel()
+    {
+        hamburgerMenu.SetActive(false);
+        bugReportPanel.SetActive(true);
+    }
+
+    public void closeBugReportPanel()
+    {
+        hamburgerMenu.SetActive(true);
+        bugReportPanel.SetActive(false);
+    }
+
     public void openMenu()
     {
         hamburgerMenu.SetActive(true);

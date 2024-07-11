@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public List<Bean> beans = new List<Bean>();
 	public GameObject offlineEarningsPanel;
 
+	public DoubleBrewingCapacityAd doubleBrewingCapacityAd;
+	public DoubleCustomerCapacityAd doubleCustomerCapacityAd;
+
 	// Track unlocked coffee beans
 	private bool[] unlockedBeans;
 	// Reference to UI text for displaying money and gems
@@ -36,8 +39,15 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public TimeSpan offlineDuration;
 	public float offlineMaxHours;
 
+	public float gainsReduction = 0.15f;
+	private Coroutine doubleIncomeCoroutine;
+
+	public bool dataLoaded;
+
 	// General Player Data
 	public double beanCnt;
+	public double totalEarnedBeans;
+	public double lifetimeEarnedBeans;
 	public double coffee;
 	public double lifetimeEarnings;
 	public double money;
@@ -46,10 +56,21 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public int gems;
 	public int prestigeLevel;
 	public long investors;
+	public long lifetimeInvestors;
 	public DateTime lastOnlineTime;
 	public List<int> harvesters;
 	public bool x2MultUnlocked;
 	public bool x12MultUnlocked;
+	public bool finishedTutorial;
+
+	// Ad info
+	public int doubleIncomeAdsWatched;
+	public bool doubleIncomeActive;
+	public bool doubleCustCapacityActive;
+	public bool doubleBrewCapacityActive;
+	public float remainingDoubleIncomeTime = 0f;
+	public float remainingDoubleBrewingTime = 0f;
+	public float remainingDoubleCustomerTime = 0f;
 
 	// Upgrade Page Data
 	public float brewTimeCostReducer;
@@ -76,12 +97,14 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public float inv_upgPriceReducer;
     public float inv_speedPerTap;
     public int inv_freeBrewChance;
+	public int inv_freeSellChance;
 	public int inv_freeUpgChance;
 	public int inv_profitBonus;
 	public int inv_upgStartCnt;
 	//public float inv_coffeeSellPriceInc;
 	// // Counts
 	public int inv_freeBrewChanceCount;
+	public int inv_freeSellChanceCount;
 	public int inv_freeUpgChanceCount;
 	public int inv_growthRateMultiplierCount;
 	public int inv_profitBonusCount;
@@ -120,15 +143,13 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 	private void Start()
 	{
-
+		dataLoaded = false;
 		currentMultiBuyIndex = 0;
 		multiBuyOptions = new string[]{"1", "10", "Next", "Max"};
 
 		prestigeSystem = prestigeSystemObj.GetComponent<PrestigeSystem>();
 
 		offlineMaxHours = 2;
-		x2MultUnlocked = false;
-		x12MultUnlocked = false;
 
 		// Initialize unlocked beans array (assuming there are 10 beans in total)
 		unlockedBeans = new bool[10];
@@ -143,6 +164,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 	public void Update()
 	{
+
 		// Update the money and gems UI display
 		updateText();
 
@@ -161,7 +183,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		// Update the money UI text with the current money value
 		moneyText.text = GlobalFunctions.FormatNumber(money, true);//"$ " + money.ToString();
 		// Update the gems UI text with the current gems value
-		gemsText.text = "" + gems;//GlobalFunctions.FormatNumber(gems);
+		gemsText.text = "" + GlobalFunctions.FormatNumber(gems);//GlobalFunctions.FormatNumber(gems);
 		// Update the gems UI text with the current gems value
 		coffeeCntText.text = GlobalFunctions.FormatNumber(coffee);
 
@@ -189,6 +211,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
     {
 		// General Player Data
 		this.beanCnt								= data.beanCnt;
+		this.totalEarnedBeans						= data.totalEarnedBeans;
+		this.lifetimeEarnedBeans					= data.lifetimeEarnedBeans;
 		this.coffee									= data.coffee;
 		this.lifetimeEarnings						= data.lifetimeEarnings;
 		this.money									= data.money;
@@ -197,10 +221,21 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		this.gems									= data.gems;
 		this.prestigeLevel							= data.prestigeLevel;
 		this.investors								= data.investors;
+		this.lifetimeInvestors						= data.lifetimeInvestors;
 		this.lastOnlineTime							= DateTime.ParseExact(data.lastOnlineTime, "MM/dd/yyyyTHH:mm:ss", null);
 		this.harvesters								= data.harvesters;
 		this.x2MultUnlocked							= data.x2MultUnlocked;
 		this.x12MultUnlocked						= data.x12MultUnlocked;
+		this.finishedTutorial						= data.finishedTutorial;
+
+		// Ad info
+		this.doubleIncomeAdsWatched					= data.doubleIncomeAdsWatched;
+		this.doubleIncomeActive						= data.doubleIncomeActive;
+		this.doubleCustCapacityActive				= data.doubleCustCapacityActive;
+		this.doubleBrewCapacityActive				= data.doubleBrewCapacityActive;
+		this.remainingDoubleIncomeTime				= data.remainingDoubleIncomeTime;
+		this.remainingDoubleBrewingTime				= data.remainingDoubleBrewingTime;
+		this.remainingDoubleCustomerTime			= data.remainingDoubleCustomerTime;
 
 		// Upgrade Page Data
 		// // Upgrades
@@ -265,6 +300,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 		// General Player Data
 		data.beanCnt						= this.beanCnt;
+		data.totalEarnedBeans				= this.totalEarnedBeans;
+		data.lifetimeEarnedBeans			= this.lifetimeEarnedBeans;
 		data.coffee							= this.coffee;
 		data.lifetimeEarnings				= this.lifetimeEarnings;
 		data.money							= this.money;
@@ -273,10 +310,21 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		data.gems							= this.gems;
 		data.prestigeLevel					= this.prestigeLevel;
 		data.investors						= this.investors;
+		data.lifetimeInvestors				= this.lifetimeInvestors;
 		data.lastOnlineTime					= DateTime.Now.ToString("MM/dd/yyyyTHH:mm:ss");
 		data.harvesters						= this.harvesters;
 		data.x2MultUnlocked					= this.x2MultUnlocked;
 		data.x12MultUnlocked				= this.x12MultUnlocked;
+		data.finishedTutorial				= this.finishedTutorial;
+
+		// Ad info
+		data.doubleIncomeAdsWatched			= this.doubleIncomeAdsWatched;
+		data.doubleIncomeActive				= this.doubleIncomeActive;
+		data.doubleCustCapacityActive		= this.doubleCustCapacityActive;
+		data.doubleBrewCapacityActive		= this.doubleBrewCapacityActive;
+		data.remainingDoubleIncomeTime		= this.remainingDoubleIncomeTime;
+		data.remainingDoubleBrewingTime		= this.remainingDoubleBrewingTime;
+		data.remainingDoubleCustomerTime	= this.remainingDoubleCustomerTime;
 
 		// Upgrade Page Data
 		// // Upgrades
@@ -339,6 +387,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	{
 		DateTime currentTime = DateTime.Now;
 		offlineDuration = currentTime - lastOnlineTime;
+		// The calculation doesn't accurately count for brew and sell time, just going to reduce it to balance the gains a bit
+		//float gainsReduction = 0.15f;
 
 		if(offlineDuration.TotalSeconds < 0)
         {
@@ -368,21 +418,21 @@ public class GameManager : MonoBehaviour, IDataPersistence
 				int totalMinutesWarp = (24 * 60);
 				double offlineBeanGains = totalBeansPerMinute * totalMinutesWarp;
 				double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
-				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * 0.25);
+				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * gainsReduction);
 			} else if (totalMinutes > offlineMaxMinutes)
             {
 				// Gains without ad
 				int totalMinutesWithoutAd = offlineMaxMinutes;
 				double offlineBeanGains = totalBeansPerMinute * totalMinutesWithoutAd;
 				double offlineCoffeeGains = Mathf.Floor((float)(offlineBeanGains / coffeeManager.GetBeansPerCup()));
-				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * 0.25);
+				offlineMoneyGains = Math.Round((offlineCoffeeGains * customerManager.GetSellPrice()) * gainsReduction);
 
 				// Gains with ad
 				int offlineMaxMinutesWithAd = offlineMaxMinutes + 60;
 				int totalMinutesWithAd = Math.Min(totalMinutes, offlineMaxMinutesWithAd);
 				double offlineBeanGainsWithAd = totalBeansPerMinute * totalMinutesWithAd;
 				double offineCoffeeGainsWithAd = Mathf.Floor((float)(offlineBeanGainsWithAd / coffeeManager.GetBeansPerCup()));
-				offlineMoneyGainsWithAd = Math.Round((offineCoffeeGainsWithAd * customerManager.GetSellPrice()) * 0.25);
+				offlineMoneyGainsWithAd = Math.Round((offineCoffeeGainsWithAd * customerManager.GetSellPrice()) * gainsReduction);
 
 				// Update display
 				int timeDifference = totalMinutesWithAd - totalMinutesWithoutAd;
@@ -438,6 +488,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
 	public void AddMoney(double amount)
 	{
+		if (doubleIncomeActive) amount = amount * 2;
 		money += amount;
 		totalMoneyEarned += amount;
 		lifetimeEarnings += amount;
@@ -445,13 +496,20 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		//UpdateMoneyText();
 	}
 
-	public void AddBeans(int amount)
+	public void AddBeans(double amount)
 	{
 		beanCnt += amount;
+		totalEarnedBeans += amount;
+		lifetimeEarnedBeans += amount;
 
 		// Update the money UI display
 		//UpdateMoneyText();
 	}
+
+	public void AddCoffee(double amount)
+    {
+		coffee += amount;
+    }
 
 	public void SpendMoney(double amount)
 	{
@@ -483,6 +541,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	{
 		money = 10;
 		beanCnt = 0;
+		totalEarnedBeans = 0;
 		totalMoneyEarned = 0;
 		coffee = 0;
 		int beanI = 0;
@@ -525,6 +584,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 	public void AddInvestors(long i)
 	{
 		investors += i;
+		lifetimeInvestors += i;
 		CalculateInvestorBoost();
 	}
 
@@ -611,6 +671,12 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		inv_freeBrewChanceCount++;
     }
 
+	public void AddInvFreeSellChance(int s = 1)
+    {
+		inv_freeSellChance += s;
+		inv_freeSellChanceCount++;
+    }
+
 	public void AddGrowthCostReducer(float g = 0.01f)
 	{
 		growthCostReducer += g;
@@ -639,5 +705,104 @@ public class GameManager : MonoBehaviour, IDataPersistence
 		coffeeSellPriceInc += c;
 		coffeeSellPriceIncCount++;
 	}
+
+	public void StartDoubleCustomerCapacity()
+    {
+		doubleCustCapacityActive = true;
+		remainingDoubleCustomerTime = 5 * 60;
+		StartCoroutine(DoubleCustCapacityTimer());
+	}
+
+	public IEnumerator DoubleCustCapacityTimer()
+	{
+
+		while (remainingDoubleCustomerTime > 0)
+		{
+			yield return new WaitForSeconds(1f);
+			remainingDoubleCustomerTime -= 1f;
+		}
+
+		doubleCustomerCapacityAd.ShowAdBtn();
+		doubleCustCapacityActive = false;
+	}
+
+	//public IEnumerator DoubleCustCapacityTimer(int timer)
+ //   {
+	//	yield return new WaitForSeconds(timer);
+	//	doubleCustomerCapacityAd.ShowAdBtn();
+	//	doubleCustCapacityActive = false;
+	//}
+
+	public void StartDoubleBrewingCapacity()
+	{
+		doubleBrewCapacityActive = true;
+		remainingDoubleBrewingTime = 5 * 60;
+		StartCoroutine(DoubleBrewingCapacityTimer());
+	}
+
+	public IEnumerator DoubleBrewingCapacityTimer()
+	{
+
+		while (remainingDoubleBrewingTime > 0)
+		{
+			yield return new WaitForSeconds(1f);
+			remainingDoubleBrewingTime -= 1f;
+		}
+
+		doubleBrewingCapacityAd.ShowAdBtn();
+		doubleBrewCapacityActive = false;
+	}
+
+	//public IEnumerator DoubleBrewingCapacityTimer(int timer)
+	//{
+	//	yield return new WaitForSeconds(timer);
+	//	doubleBrewingCapacityAd.ShowAdBtn();
+	//	doubleBrewCapacityActive = false;
+	//}
+
+	public void startDoubleIncome()
+    {
+		if(doubleIncomeAdsWatched < 4)
+        {
+			if(!doubleIncomeActive)
+			{
+				doubleIncomeActive = true;
+				remainingDoubleIncomeTime = 30 * 60;
+				doubleIncomeCoroutine = StartCoroutine(DoubleIncomeTimer());
+			} else
+			{
+				AddDoubleIncomeTime();
+			}
+
+			doubleIncomeAdsWatched++;
+        }
+    }
+
+	public IEnumerator DoubleIncomeTimer()
+    {
+
+		while (remainingDoubleIncomeTime > 0)
+		{
+			yield return new WaitForSeconds(1f);
+			remainingDoubleIncomeTime -= 1f;
+			if(remainingDoubleIncomeTime%1800 == 0)
+            {
+				doubleIncomeAdsWatched--;
+            }
+		}
+
+		doubleIncomeActive = false;
+	}
+
+	public void AddDoubleIncomeTime()
+    {
+
+		remainingDoubleIncomeTime += 30 * 60;
+
+        if (doubleIncomeCoroutine == null)
+        {
+            doubleIncomeCoroutine = StartCoroutine(DoubleIncomeTimer());
+        }
+    }
 
 }

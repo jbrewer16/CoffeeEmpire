@@ -104,6 +104,9 @@ public class Upgrade : MonoBehaviour
             case UpgOptions.inv_freeBrewChance:
                 upgDescTxt.text = gameManager.inv_freeBrewChance + "%\n" + desc;
                 break;
+            case UpgOptions.inv_freeSellChance:
+                upgDescTxt.text = gameManager.inv_freeSellChance + "%\n" + desc;
+                break;
             default:
                 break;
         }
@@ -148,6 +151,9 @@ public class Upgrade : MonoBehaviour
                 break;
             case UpgOptions.inv_freeBrewChance:
                 currentUpgrade = gameManager.inv_freeBrewChanceCount;
+                break;
+            case UpgOptions.inv_freeSellChance:
+                currentUpgrade = gameManager.inv_freeSellChanceCount;
                 break;
             default:
                 break;
@@ -235,6 +241,9 @@ public class Upgrade : MonoBehaviour
             case UpgOptions.inv_freeBrewChance:
                 gameManager.AddInvFreeBrewChance();
                 break;
+            case UpgOptions.inv_freeSellChance:
+                gameManager.AddInvFreeSellChance();
+                break;
             default:
                 break;
         }
@@ -245,7 +254,7 @@ public class Upgrade : MonoBehaviour
         float upgCost = initialCost * Mathf.Pow(upgradeCostMultiplier, (currentUpgrade - 1));
         if(upgTypes == UpgType.cash)
         {
-            return upgCost - (upgCost * (gameManager.growthCostReducer + gameManager.inv_upgPriceReducer));
+            return upgCost - (upgCost * (gameManager.inv_upgPriceReducer));
         } else
         {
             return upgCost;
@@ -267,7 +276,8 @@ public enum UpgOptions
     inv_upgPriceReducer,
     inv_speedIncreasePerTap,
     inv_freeUpgChance,
-    inv_freeBrewChance
+    inv_freeBrewChance,
+    inv_freeSellChance,
 }
 
 public enum UpgType

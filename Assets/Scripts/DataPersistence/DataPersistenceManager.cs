@@ -21,6 +21,8 @@ public class DataPersistenceManager : MonoBehaviour
     
     public static DataPersistenceManager instance { get; private set; }
     public FileDataHandler dataHandler;
+    public GameManager gameManager;
+    public TutorialManager tutorialManager;
 
     private void Awake()
     {
@@ -67,6 +69,35 @@ public class DataPersistenceManager : MonoBehaviour
         foreach(IDataPersistence dataPersistenceObj in dataPersistenceObjs)
         {
             dataPersistenceObj.LoadData(gameData);
+        }
+
+        if(!gameManager.finishedTutorial)
+        {
+            Debug.Log("The tutorial was unfinished, restarting!");
+            NewGame();
+            foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjs)
+            {
+                dataPersistenceObj.LoadData(gameData);
+            }
+        }
+
+        gameManager.dataLoaded = true;
+        if(!gameManager.finishedTutorial)
+        {
+            tutorialManager.showWelcomePanel();
+        }
+
+        if (gameManager.remainingDoubleIncomeTime > 0)
+        {
+            StartCoroutine(gameManager.DoubleIncomeTimer());
+        }
+        if (gameManager.remainingDoubleCustomerTime > 0)
+        {
+            StartCoroutine(gameManager.DoubleCustCapacityTimer());
+        }
+        if (gameManager.remainingDoubleBrewingTime > 0)
+        {
+            StartCoroutine(gameManager.DoubleBrewingCapacityTimer());
         }
 
     }

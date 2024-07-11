@@ -10,6 +10,8 @@ public class GameData
 
 	// General Player Data
 	public double beanCnt;
+	public double totalEarnedBeans;
+	public double lifetimeEarnedBeans;
 	public double coffee;
 	public double lifetimeEarnings;
     public double money;
@@ -18,11 +20,22 @@ public class GameData
 	public int gems;
 	public int prestigeLevel;
 	public long investors;
+	public long lifetimeInvestors;
 	public string lastOnlineTime;
 	public List<BeanData> beans;
 	public List<int> harvesters;
 	public bool x2MultUnlocked;
 	public bool x12MultUnlocked;
+	public bool finishedTutorial;
+
+	// Ad info
+	public int doubleIncomeAdsWatched;
+	public bool doubleIncomeActive;
+	public bool doubleCustCapacityActive;
+	public bool doubleBrewCapacityActive;
+	public float remainingDoubleIncomeTime = 0f;
+	public float remainingDoubleBrewingTime = 0f;
+	public float remainingDoubleCustomerTime = 0f;
 
 	// Upgrade Page Data
 	// // Upgrades
@@ -101,7 +114,7 @@ public class GameData
 		beans.Add(new BeanData(8, "Pumpkin Spice",	1024,	2.5e7,		120,	5e8,		1.09f));
 		beans.Add(new BeanData(9, "Lava",			2048,	5e8,		180,	1.5e10,		1.08f));
 		beans.Add(new BeanData(10,"Radioactive",	4096,	1.5e9,		300,	5e13,		1.07f));
-		beans.Add(new BeanData(11,"Magical",		8192,	3e11,		420,	7e15,		1.06f));
+		beans.Add(new BeanData(11,"Magical",		8192,	3e11,		420,	7e15,		1.06f)); 
 		beans.Add(new BeanData(12,"Quantum",		16384,	7.5e15,		600,	1.5e18,		1.05f));
 		beans.Add(new BeanData(13,"Galactic",		32768,	2.5e19,		900,	3e24,		1.04f));
 		beans.Add(new BeanData(14,"Cosmic",			65536,	5e24,		1500,	1e30,		1.03f));
@@ -134,6 +147,16 @@ public class GameData
 		this.harvesters = new List<int>();
 		this.x2MultUnlocked = false;
 		this.x12MultUnlocked = false;
+		this.finishedTutorial = false;
+
+		// Ad info
+		this.doubleIncomeAdsWatched = 0;
+		this.doubleIncomeActive = false;
+		this.doubleCustCapacityActive = false;
+		this.doubleBrewCapacityActive = false;
+		this.remainingDoubleIncomeTime = 0;
+		this.remainingDoubleBrewingTime = 0;
+		this.remainingDoubleCustomerTime = 0;
 
 		// Upgrade Page Data
 		// // Upgrades
